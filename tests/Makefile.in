@@ -57,10 +57,10 @@ CONFIG_CLEAN_FILES =
 PROGRAMS = $(noinst_PROGRAMS)
 am_align_OBJECTS = align.$(OBJEXT)
 align_OBJECTS = $(am_align_OBJECTS)
-align_DEPENDENCIES = ../src/liblzo.la
+align_DEPENDENCIES = ../src/liblzo2.la
 am_chksum_OBJECTS = chksum.$(OBJEXT)
 chksum_OBJECTS = $(am_chksum_OBJECTS)
-chksum_DEPENDENCIES = ../src/liblzo.la
+chksum_DEPENDENCIES = ../src/liblzo2.la
 am_promote_OBJECTS = promote.$(OBJEXT)
 promote_OBJECTS = $(am_promote_OBJECTS)
 promote_LDADD = $(LDADD)
@@ -202,8 +202,8 @@ align_SOURCES = align.c
 chksum_SOURCES = chksum.c
 promote_SOURCES = promote.c
 sizes_SOURCES = sizes.c
-align_LDADD = ../src/liblzo.la
-chksum_LDADD = ../src/liblzo.la
+align_LDADD = ../src/liblzo2.la
+chksum_LDADD = ../src/liblzo2.la
 all: all-am
 
 .SUFFIXES:

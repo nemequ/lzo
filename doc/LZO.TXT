@@ -6,8 +6,8 @@
  Author  : Markus Franz Xaver Johannes Oberhumer
            <markus@oberhumer.com>
            http://www.oberhumer.com/opensource/lzo/
- Version : 2.00
- Date    : 30 May 2005
+ Version : 2.01
+ Date    : 27 Jun 2005
 
 
  Abstract
@@ -20,8 +20,8 @@
  competitive compression ratio while still decompressing at
  this very high speed.
 
- LZO is copyrighted OpenSource distributed under the GNU General
- Public License.
+ The LZO algorithms and implementations are copyrighted OpenSource
+ distributed under the GNU General Public License.
 
 
  Introduction
@@ -30,7 +30,7 @@
  de-/compression in real-time. This means it favours speed
  over compression ratio.
 
- I named it LZO standing for Lempel-Ziv-Oberhumer.
+ The acronym LZO is standing for Lempel-Ziv-Oberhumer.
 
  LZO is written in ANSI C. Both the source code and the compressed
  data format are designed to be portable across platforms.
@@ -217,7 +217,7 @@
  Please note that due to the design of the ELF executable format
  the performance of a shared library on i386 systems (e.g. Linux)
  is a little bit slower, so you may want to link your applications
- with the static version (liblzo.a) anyway.
+ with the static version (liblzo2.a) anyway.
 
  For building under DOS, Win16, Win32, OS/2 and other systems
  take a look at the file B/00readme.txt.

@@ -15,7 +15,7 @@ CC ?= cc
 CFLAGS ?= -O
 
 CFI = -I$(top_srcdir)/include -I$(top_srcdir)
-BNAME = lzo
+BNAME = lzo2
 BLIB = lib$(BNAME).a
 
 CF = $(CPPFLAGS) $(CFI) $(CFLAGS)
@@ -75,7 +75,7 @@ testmini.out: $(top_srcdir)/minilzo/testmini.c $(top_srcdir)/minilzo/minilzo.c
 # dependencies
 $(PROGRAMS): $(BLIB)
 # object dependencies are generated via -MMD
--include *.d ../i386-linux-gcc-3.4/*.d
+-include *.d
 
 
 # debug

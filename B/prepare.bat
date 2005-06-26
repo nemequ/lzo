@@ -3,8 +3,8 @@
 
 @set CFI=-Iinclude -I.
 @set CFASM=-DLZO_USE_ASM
-@set BNAME=lzo
-@set BLIB=lzo.lib
-@set BDLL=lzo.dll
+@set BNAME=lzo2
+@set BLIB=lzo2.lib
+@set BDLL=lzo2.dll
 
 @echo Compiling, please be patient...

@@ -97,14 +97,14 @@ _lzo_version_date(void)
 /***********************************************************************
 // adler32 checksum
 // adapted from free code by Mark Adler <madler@alumni.caltech.edu>
-// see http://www.cdrom.com/pub/infozip/zlib/
+// see http://www.zlib.org/
 ************************************************************************/
 
 #define LZO_BASE 65521u /* largest prime smaller than 65536 */
 #define LZO_NMAX 5552
 /* NMAX is the largest n such that 255n(n+1)/2 + (n+1)(BASE-1) <= 2^32-1 */
 
-#define LZO_DO1(buf,i)  {s1 += buf[i]; s2 += s1;}
+#define LZO_DO1(buf,i)  s1 += buf[i]; s2 += s1
 #define LZO_DO2(buf,i)  LZO_DO1(buf,i); LZO_DO1(buf,i+1);
 #define LZO_DO4(buf,i)  LZO_DO2(buf,i); LZO_DO2(buf,i+2);
 #define LZO_DO8(buf,i)  LZO_DO4(buf,i); LZO_DO4(buf,i+4);
@@ -140,6 +140,12 @@ lzo_adler32(lzo_uint32 adler, const lzo_bytep buf, lzo_uint len)
     }
     return (s2 << 16) | s1;
 }
+
+#undef LZO_DO1
+#undef LZO_DO2
+#undef LZO_DO4
+#undef LZO_DO8
+#undef LZO_DO16
 
 
 /*

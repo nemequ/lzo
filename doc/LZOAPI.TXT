@@ -167,19 +167,20 @@ length `src_len' to the address given by `dst'.
 The length of the compressed blocked will be returned in the variable
 pointed by `dst_len'.
 
-The two blocks may overlap under certain conditions (see examples/overlap.c).
+The two blocks may overlap under certain conditions (see examples/overlap.c),
+thereby allowing "in-place" compression.
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #include <lzo/lzo1x.h>
 
-int lzo1x_1_compress ( const lzo_byte *src, lzo_uint  src_len,
-                             lzo_byte *dst, lzo_uint *dst_len,
+int lzo1x_1_compress ( const lzo_bytep src, lzo_uint  src_len,
+                             lzo_bytep dst, lzo_uintp dst_len,
                              lzo_voidp wrkmem );
 
   Algorithm:            LZO1X
   Compression level:    LZO1X-1
-  Memory requirements:  LZO1X_1_MEM_COMPRESS    (64 kB)
+  Memory requirements:  LZO1X_1_MEM_COMPRESS    (64 kB on 32-bit machines)
 
   This compressor is pretty fast.
 
@@ -189,13 +190,13 @@ int lzo1x_1_compress ( const lzo_byte *src, lzo_uint  src_len,
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #include <lzo/lzo1x.h>
 
-int lzo1x_999_compress ( const lzo_byte *src, lzo_uint  src_len,
-                               lzo_byte *dst, lzo_uint *dst_len,
+int lzo1x_999_compress ( const lzo_bytep src, lzo_uint  src_len,
+                               lzo_bytep dst, lzo_uintp dst_len,
                                lzo_voidp wrkmem );
 
   Algorithm:            LZO1X
   Compression level:    LZO1X-999
-  Memory requirements:  LZO1X_999_MEM_COMPRESS  (448 kB)
+  Memory requirements:  LZO1X_999_MEM_COMPRESS  (448 kB on 32-bit machines)
 
   This compressor is quite slow but achieves a good compression
   ratio. It is mainly intended for generating pre-compressed data.
@@ -220,7 +221,8 @@ been decompressed so far will be returned.
 The safe decompressors expect that the number of bytes available in
 the `dst' block is passed via the variable pointed by `dst_len'.
 
-The two blocks may overlap under certain conditions (see examples/overlap.c).
+The two blocks may overlap under certain conditions (see examples/overlap.c),
+thereby allowing "in-place" decompression.
 
 
 Description of return values:
@@ -241,8 +243,8 @@ Description of return values:
   LZO_E_OUTPUT_OVERRUN
     The decompressor requested to write more bytes to the uncompressed
     block than available.
-    Either your data is corrupted or you should increase the number of
-    available bytes passed in `dst_len'.
+    Either your data is corrupted, or you should increase the number of
+    available bytes passed in the variable pointed by `dst_len'.
 
   LZO_E_LOOKBEHIND_OVERRUN
     Your data is corrupted.
@@ -258,8 +260,8 @@ Description of return values:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #include <lzo1x.h>
 
-int lzo1x_decompress ( const lzo_byte *src, lzo_uint  src_len,
-                             lzo_byte *dst, lzo_uint *dst_len,
+int lzo1x_decompress ( const lzo_bytep src, lzo_uint  src_len,
+                             lzo_bytep dst, lzo_uintp dst_len,
                              lzo_voidp wrkmem );
 
   Algorithm:            LZO1X

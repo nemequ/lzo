@@ -18,7 +18,7 @@
 # Copyright (C) 1996-2005 Markus F.X.J. Oberhumer
 #
 
-SOURCES = $(liblzo_la_SOURCES)
+SOURCES = $(liblzo2_la_SOURCES)
 
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
@@ -65,7 +65,7 @@ LTLIBRARIES = $(lib_LTLIBRARIES)
 @LZO_USE_ASM_TRUE@	lzo1x_f2.lo lzo1x_s1.lo lzo1x_s2.lo \
 @LZO_USE_ASM_TRUE@	lzo1y_f1.lo lzo1y_f2.lo lzo1y_s1.lo \
 @LZO_USE_ASM_TRUE@	lzo1y_s2.lo
-am_liblzo_la_OBJECTS = lzo_crc.lo lzo_init.lo lzo_ptr.lo lzo_str.lo \
+am_liblzo2_la_OBJECTS = lzo_crc.lo lzo_init.lo lzo_ptr.lo lzo_str.lo \
 	lzo_util.lo lzo1.lo lzo1_99.lo lzo1a.lo lzo1a_99.lo lzo1b_1.lo \
 	lzo1b_2.lo lzo1b_3.lo lzo1b_4.lo lzo1b_5.lo lzo1b_6.lo \
 	lzo1b_7.lo lzo1b_8.lo lzo1b_9.lo lzo1b_99.lo lzo1b_9x.lo \
@@ -79,7 +79,7 @@ am_liblzo_la_OBJECTS = lzo_crc.lo lzo_init.lo lzo_ptr.lo lzo_str.lo \
 	lzo1y_9x.lo lzo1y_d1.lo lzo1y_d2.lo lzo1y_d3.lo lzo1y_o.lo \
 	lzo1z_9x.lo lzo1z_d1.lo lzo1z_d2.lo lzo1z_d3.lo lzo2a_9x.lo \
 	lzo2a_d1.lo lzo2a_d2.lo
-liblzo_la_OBJECTS = $(am_liblzo_la_OBJECTS)
+liblzo2_la_OBJECTS = $(am_liblzo2_la_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/autoconf/depcomp
 am__depfiles_maybe = depfiles
@@ -91,8 +91,8 @@ LTCOMPILE = $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) \
 CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-SOURCES = $(liblzo_la_SOURCES)
-DIST_SOURCES = $(liblzo_la_SOURCES)
+SOURCES = $(liblzo2_la_SOURCES)
+DIST_SOURCES = $(liblzo2_la_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -211,9 +211,9 @@ target_os = @target_os@
 target_vendor = @target_vendor@
 SUFFIXES = .S
 INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)
-lib_LTLIBRARIES = liblzo.la
-liblzo_la_LDFLAGS = -version-info 2:0:0
-liblzo_la_SOURCES = \
+lib_LTLIBRARIES = liblzo2.la
+liblzo2_la_LDFLAGS = -version-info 2:0:0
+liblzo2_la_SOURCES = \
     lzo_crc.c lzo_init.c lzo_ptr.c lzo_str.c lzo_util.c \
     lzo1.c lzo1_99.c \
     lzo1a.c lzo1a_99.c \
@@ -241,8 +241,8 @@ EXTRA_DIST = \
     lzo1a_de.h lzo1b_cc.h lzo1b_de.h lzo1c_cc.h lzo_conf.h lzo_dict.h \
     lzo_ptr.h stats1a.h stats1b.h stats1c.h miniacc.h
 
-liblzo_la_LIBADD = $(LZO_ASM_OBJECTS)
-liblzo_la_DEPENDENCIES = $(liblzo_la_LIBADD)
+liblzo2_la_LIBADD = $(LZO_ASM_OBJECTS)
+liblzo2_la_DEPENDENCIES = $(liblzo2_la_LIBADD)
 
 # /***********************************************************************
 # // assembler support
@@ -313,8 +313,8 @@ clean-libLTLIBRARIES:
 	  echo "rm -f \"$${dir}/so_locations\""; \
 	  rm -f "$${dir}/so_locations"; \
 	done
-liblzo.la: $(liblzo_la_OBJECTS) $(liblzo_la_DEPENDENCIES) 
-	$(LINK) -rpath $(libdir) $(liblzo_la_LDFLAGS) $(liblzo_la_OBJECTS) $(liblzo_la_LIBADD) $(LIBS)
+liblzo2.la: $(liblzo2_la_OBJECTS) $(liblzo2_la_DEPENDENCIES) 
+	$(LINK) -rpath $(libdir) $(liblzo2_la_LDFLAGS) $(liblzo2_la_OBJECTS) $(liblzo2_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)

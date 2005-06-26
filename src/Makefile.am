@@ -10,11 +10,11 @@ INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)
 CPPFLAGS = $(LZO_CPPFLAGS) $(configure_CPPFLAGS) $(LZO_EXTRA_CPPFLAGS)
 CFLAGS = $(LZO_CFLAGS) $(configure_CFLAGS) $(LZO_EXTRA_CFLAGS)
 
-lib_LTLIBRARIES = liblzo.la
+lib_LTLIBRARIES = liblzo2.la
 
-liblzo_la_LDFLAGS = -version-info 2:0:0
+liblzo2_la_LDFLAGS = -version-info 2:0:0
 
-liblzo_la_SOURCES = \
+liblzo2_la_SOURCES = \
     lzo_crc.c lzo_init.c lzo_ptr.c lzo_str.c lzo_util.c \
     lzo1.c lzo1_99.c \
     lzo1a.c lzo1a_99.c \
@@ -42,8 +42,8 @@ EXTRA_DIST = \
     lzo1a_de.h lzo1b_cc.h lzo1b_de.h lzo1c_cc.h lzo_conf.h lzo_dict.h \
     lzo_ptr.h stats1a.h stats1b.h stats1c.h miniacc.h
 
-liblzo_la_LIBADD = $(LZO_ASM_OBJECTS)
-liblzo_la_DEPENDENCIES = $(liblzo_la_LIBADD)
+liblzo2_la_LIBADD = $(LZO_ASM_OBJECTS)
+liblzo2_la_DEPENDENCIES = $(liblzo2_la_LIBADD)
 
 
 # /***********************************************************************

@@ -14,8 +14,8 @@ precomp_SOURCES = precomp.c
 precomp2_SOURCES = precomp2.c
 simple_SOURCES = simple.c
 
-LDADD = ../src/liblzo.la
-DEPENDENCIES = ../src/liblzo.la
+LDADD = ../src/liblzo2.la
+DEPENDENCIES = ../src/liblzo2.la
 
 EXTRA_DIST = portab.h portab_a.h
 

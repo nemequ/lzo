@@ -12,6 +12,6 @@ chksum_SOURCES = chksum.c
 promote_SOURCES = promote.c
 sizes_SOURCES = sizes.c
 
-align_LDADD = ../src/liblzo.la
-chksum_LDADD = ../src/liblzo.la
+align_LDADD = ../src/liblzo2.la
+chksum_LDADD = ../src/liblzo2.la
 

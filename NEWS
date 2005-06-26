@@ -2,6 +2,12 @@
 User visible changes for LZO -- a real-time data compression library
 ============================================================================
 
+Changes in 2.01 (27 Jun 2005)
+  * Changed the configure system to install the LZO library under the
+    name "liblzo2" so that parallel installation with LZO v1 is possible.
+  * Improved auto-configuration in miniLZO for some embedded targets like
+    Blackfin and H8/300 processors.
+
 Changes in 2.00 (30 May 2005)
 
   [Library interface changes]
@@ -30,7 +36,7 @@ Changes in 2.00 (30 May 2005)
   * Full 16-bit support for ancient DOS 286 protected mode, OS/2 1.x
     and Windows 3.x.
   * The LZO library now compiles and works on completely freestanding or
-    embedded systems, as long as you have <limits.h> and <stddef.h> header
+    embedded systems as long as you have <limits.h> and <stddef.h> header
     files. See the B/generic/build_freestanding.sh build script.
 
   [Misc]

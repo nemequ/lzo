@@ -32,7 +32,7 @@
 /***********************************************************************
 // crc32 checksum
 // adapted from free code by Mark Adler <madler@alumni.caltech.edu>
-// see http://www.cdrom.com/pub/infozip/zlib/
+// see http://www.zlib.org/
 ************************************************************************/
 
 static const lzo_uint32 lzo_crc32_table[256] = {
@@ -142,6 +142,12 @@ lzo_crc32(lzo_uint32 c, const lzo_bytep buf, lzo_uint len)
     return crc ^ LZO_UINT32_C(0xffffffff);
 #undef table
 }
+
+#undef LZO_DO1
+#undef LZO_DO2
+#undef LZO_DO4
+#undef LZO_DO8
+#undef LZO_DO16
 
 
 /*

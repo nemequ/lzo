@@ -201,13 +201,13 @@ LZO will expand incompressible data by a little amount.
 I still haven't computed the exact values, but I suggest using
 these formulas for a worst-case expansion calculation:
 
-  LZO1* algorithms:
-  -----------------
+  Algorithm LZO1, LZO1A, LZO1B, LZO1C, LZO1F, LZO1X, LZO1Y, LZO1Z:
+  ----------------------------------------------------------------
     output_block_size = input_block_size + (input_block_size / 16) + 64 + 3
 
-    This is about 106% for a large block size.
+    [This is about 106% for a large block size.]
 
-  LZO2* algorithms:
-  -----------------
+  Algorithm LZO2A:
+  ----------------
     output_block_size = input_block_size + (input_block_size / 8) + 128 + 3
 

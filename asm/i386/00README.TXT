@@ -3,7 +3,7 @@ Directory overview:
 ===================
 
 As writing portable assembler sources supporting different operating
-systems, compilers and assemblers has proven to be extremly painful,
+systems, compilers and assemblers has proven to be extremely painful,
 the assembler sources have been converted into a more portable `db'
 format. Use these whenever possible.
 

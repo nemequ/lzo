@@ -16,7 +16,7 @@ test "X${CFLAGS+set}" = Xset || CFLAGS="-O"
 # LZO_EXTRA_SOURCES, LZO_EXTRA_OBJECTS, LZO_EXTRA_LIBS
 
 CFI="-I${top_srcdir}/include -I${top_srcdir}"
-BNAME=lzo
+BNAME=lzo2
 BLIB=lib${BNAME}.a
 
 CF="$CPPFLAGS $CFI $CFLAGS"
@@ -41,7 +41,7 @@ echo $AR rcs $BLIB *.o $LZO_EXTRA_OBJECTS
 if test -n "$LZO_CFG_FREESTANDING"; then
 
 echo "//"
-echo "// Building $BLIB was successful. All done."
+echo "// Building $BLIB in freestanding mode was successful. All done."
 echo "// Now try 'nm --extern-only $BLIB'"
 
 else

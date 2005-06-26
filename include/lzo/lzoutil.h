@@ -1,4 +1,4 @@
-/* lzoutil.h -- utilitiy functions for use by applications
+/* lzoutil.h -- utilitiy functions for use by applications [DEPRECATED]
 
    This file is part of the LZO real-time data compression library.
 
@@ -48,7 +48,8 @@ extern "C" {
 
 
 /***********************************************************************
-// deprecated macros for use in the example programs - DO NOT USE
+// LZO-v1 deprecated macros (which were used in the old example programs)
+// DO NOT USE
 ************************************************************************/
 
 #define lzo_alloc(a,b)      (malloc((a)*(b)))

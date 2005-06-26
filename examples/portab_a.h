@@ -60,6 +60,10 @@
 #endif
 #if defined(WANT_LZO_UCLOCK)
 #  define ACC_WANT_ACCLIB_UCLOCK 1
+#  if 0 && (LZO_ARCH_AMD64 || LZO_ARCH_I386)
+#    define __ACCLIB_UCLOCK_USE_RDTSC 1
+#    define ACC_WANT_ACCLIB_RDTSC 1
+#  endif
 #endif
 #if defined(WANT_LZO_WILDARGV)
 #  define ACC_WANT_ACCLIB_WILDARGV 1

@@ -37,7 +37,7 @@ This configure script may be copied, distributed and modified under the
 terms of the GNU General Public License; see COPYING for more details.])
 
 AC_PREREQ(2.59)
-AC_INIT([lzo],[2.00],[markus@oberhumer.com])
+AC_INIT([lzo],[2.01],[markus@oberhumer.com])
 AC_MSG_NOTICE([Configuring LZO $PACKAGE_VERSION])
 AC_CONFIG_SRCDIR(src/lzo_init.c)
 AC_CONFIG_AUX_DIR(autoconf)

@@ -290,12 +290,15 @@ int __lzo_cdecl_main main(int argc, char *argv[])
 #endif
 
     orig_len = in_len;
+    r = -100;
+#ifdef USE_LZO1X
     if (best_compress == 1)
         r = lzo1x_optimize(out,out_len,in,&orig_len,NULL);
-    else if (best_compress == 2)
+#endif
+#ifdef USE_LZO1Y
+    if (best_compress == 2)
         r = lzo1y_optimize(out,out_len,in,&orig_len,NULL);
-    else
-        r = -100;
+#endif
     if (r != LZO_E_OK || orig_len != in_len)
     {
         /* this should NEVER happen */
@@ -338,12 +341,15 @@ int __lzo_cdecl_main main(int argc, char *argv[])
 #ifdef PARANOID
     lzo_memset(in,0,in_len);    /* paranoia - clear output buffer */
     orig_len = in_len;
+    r = -100;
+#ifdef USE_LZO1X
     if (best_compress == 1)
         r = lzo1x_decompress_safe(out,out_len,in,&orig_len,NULL);
-    else if (best_compress == 2)
+#endif
+#ifdef USE_LZO1Y
+    if (best_compress == 2)
         r = lzo1y_decompress_safe(out,out_len,in,&orig_len,NULL);
-    else
-        r = -100;
+#endif
     if (r != LZO_E_OK || orig_len != in_len)
     {
         /* this should NEVER happen */
