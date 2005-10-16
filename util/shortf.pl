@@ -21,7 +21,7 @@ $c = "\x00";
 $x = $c x 1024;
 
 for $i (0 .. 50) {
-    $name = sprintf("f%04d.fil",$i);
+    $name = sprintf("f%04d.dat",$i);
     open(OUTFILE,">$name") || die "$0: cannot open '$name': $!";
     binmode(OUTFILE);
     print OUTFILE substr($x,0,$i);

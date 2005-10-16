@@ -15,9 +15,8 @@
    All Rights Reserved.
 
    The LZO library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public License as
-   published by the Free Software Foundation; either version 2 of
-   the License, or (at your option) any later version.
+   modify it under the terms of the GNU General Public License,
+   version 2, as published by the Free Software Foundation.
 
    The LZO library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,7 +26,7 @@
    You should have received a copy of the GNU General Public License
    along with the LZO library; see the file COPYING.
    If not, write to the Free Software Foundation, Inc.,
-   59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
    Markus F.X.J. Oberhumer
    <markus@oberhumer.com>
@@ -38,9 +37,9 @@
 #ifndef __LZOCONF_H_INCLUDED
 #define __LZOCONF_H_INCLUDED
 
-#define LZO_VERSION             0x2010
-#define LZO_VERSION_STRING      "2.01"
-#define LZO_VERSION_DATE        "Jun 27 2005"
+#define LZO_VERSION             0x2020
+#define LZO_VERSION_STRING      "2.02"
+#define LZO_VERSION_DATE        "Oct 17 2005"
 
 /* internal Autoconf configuration file - only used when building LZO */
 #if defined(LZO_HAVE_CONFIG_H)
@@ -76,7 +75,7 @@ extern "C" {
 
 
 /***********************************************************************
-//
+// some core defines
 ************************************************************************/
 
 #if !defined(LZO_UINT32_C)
@@ -156,9 +155,9 @@ extern "C" {
 
 /* The larger type of lzo_uint and lzo_uint32. */
 #if (LZO_UINT_MAX >= LZO_UINT32_MAX)
-#  define lzo_xint             	lzo_uint
+#  define lzo_xint              lzo_uint
 #else
-#  define lzo_xint             	lzo_uint32
+#  define lzo_xint              lzo_uint32
 #endif
 
 /* Memory model that allows to access memory at offsets of lzo_uint. */
@@ -284,9 +283,9 @@ struct lzo_callback_t
     /* a progress indicator callback function (set to 0 to disable) */
     lzo_progress_func_t nprogress;
 
-    /* NOTE: the first parameter of nalloc/nfree/nprogress callbacks ("self")
-     * points back to this struct, so you are free to store some extra
-     * info in the following variables. */
+    /* NOTE: the first parameter "self" of the nalloc/nfree/nprogress
+     * callbacks points back to this struct, so you are free to store
+     * some extra info in the following variables. */
     lzo_voidp user1;
     lzo_xint user2;
     lzo_xint user3;
@@ -395,8 +394,8 @@ LZO_EXTERN(unsigned) __lzo_align_gap(const lzo_voidp _ptr, lzo_uint _size);
 #define __LZO_CMODEL
 #define __LZO_DMODEL
 #define __LZO_ENTRY             __LZO_CDECL
-#define LZO_EXTERN_CDECL	LZO_EXTERN
-#define LZO_ALIGN		LZO_PTR_ALIGN_UP
+#define LZO_EXTERN_CDECL        LZO_EXTERN
+#define LZO_ALIGN               LZO_PTR_ALIGN_UP
 
 #define lzo_compress_asm_t      lzo_compress_t
 #define lzo_decompress_asm_t    lzo_decompress_t
@@ -410,3 +409,5 @@ LZO_EXTERN(unsigned) __lzo_align_gap(const lzo_voidp _ptr, lzo_uint _size);
 
 #endif /* already included */
 
+
+/* vim:set ts=4 et: */

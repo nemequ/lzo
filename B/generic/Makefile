@@ -40,7 +40,8 @@ PROGRAMS = dict.out lzopack.out precomp.out precomp2.out simple.out lzotest.out
 ## rules
 ##
 
-all: $(BLIB) $(PROGRAMS) testmini.out
+all.targets ?= $(BLIB) $(PROGRAMS) testmini.out
+all: $(all.targets)
 
 clean:
 	rm -f *.d *.o $(BLIB) $(PROGRAMS) testmini.out

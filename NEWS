@@ -2,6 +2,10 @@
 User visible changes for LZO -- a real-time data compression library
 ============================================================================
 
+Changes in 2.02 (17 Oct 2005)
+  * Updated the build and Autoconf scripts to fix some reported
+    compilation problems.
+
 Changes in 2.01 (27 Jun 2005)
   * Changed the configure system to install the LZO library under the
     name "liblzo2" so that parallel installation with LZO v1 is possible.

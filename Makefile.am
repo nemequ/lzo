@@ -3,7 +3,7 @@
 # Copyright (C) 1996-2005 Markus F.X.J. Oberhumer
 #
 
-AUTOMAKE_OPTIONS = 1.9.2 gnu
+AUTOMAKE_OPTIONS = 1.9.5 gnu
 
 SUBDIRS = include src lzotest examples tests minilzo
 
@@ -18,7 +18,7 @@ dist-hook:
 	-rm -rf "./$(distdir)/autoconf/"
 	cp -pR $(srcdir)/B/ $(srcdir)/asm/ $(srcdir)/autoconf/ $(srcdir)/doc/ $(srcdir)/util/ "$(distdir)/"
 	-rm -f `find "./$(distdir)/" -type l -print`
-	-rm -f ./$(distdir)/util/*.fil
+	-rm -f ./$(distdir)/util/*.dat
 
 check-local: all-am
 	./lzotest/lzotest -mlzo -n2 -q $(top_srcdir)/COPYING

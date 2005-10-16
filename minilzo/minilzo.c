@@ -15,9 +15,8 @@
    All Rights Reserved.
 
    The LZO library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public License as
-   published by the Free Software Foundation; either version 2 of
-   the License, or (at your option) any later version.
+   modify it under the terms of the GNU General Public License,
+   version 2, as published by the Free Software Foundation.
 
    The LZO library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,7 +26,7 @@
    You should have received a copy of the GNU General Public License
    along with the LZO library; see the file COPYING.
    If not, write to the Free Software Foundation, Inc.,
-   59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
    Markus F.X.J. Oberhumer
    <markus@oberhumer.com>
@@ -54,7 +53,7 @@
 #endif
 #include <limits.h>
 #include <stddef.h>
-#if defined(MINILZO_CFG_INTERNAL_LZODEFS)
+#if defined(MINILZO_CFG_USE_INTERNAL_LZODEFS)
 
 #ifndef __LZODEFS_H_INCLUDED
 #define __LZODEFS_H_INCLUDED 1
@@ -71,7 +70,7 @@
 #if 1 && defined(__INTERIX) && defined(__GNUC__) && !defined(_ALL_SOURCE)
 #  define _ALL_SOURCE 1
 #endif
-#if defined(__GNUC__) && defined(__mips__) && defined(__R5900__)
+#if defined(__mips__) && defined(__R5900__)
 #  if !defined(__LONG_MAX__)
 #    define __LONG_MAX__ 9223372036854775807L
 #  endif
@@ -253,7 +252,7 @@
 #define LZO_CPP_ECONCAT3(a,b,c)         LZO_CPP_CONCAT3(a,b,c)
 #define LZO_CPP_ECONCAT4(a,b,c,d)       LZO_CPP_CONCAT4(a,b,c,d)
 #define LZO_CPP_ECONCAT5(a,b,c,d,e)     LZO_CPP_CONCAT5(a,b,c,d,e)
-#define __LZO_MASK_GEN(o,b)     ((((o << ((b)-1)) - o) << 1) + o)
+#define __LZO_MASK_GEN(o,b)     (((((o) << ((b)-1)) - (o)) << 1) + (o))
 #if 1 && defined(__cplusplus)
 #  if !defined(__STDC_CONSTANT_MACROS)
 #    define __STDC_CONSTANT_MACROS 1
@@ -581,8 +580,8 @@
 #  define LZO_INFO_CC           "unknown"
 #  define LZO_INFO_CCVER        "unknown"
 #endif
-#if (LZO_CC_MSC && (_MSC_VER >= 1200)) && !defined(_MSC_FULL_VER)
-#  error "LZO_CC_MSC"
+#if 0 && (LZO_CC_MSC && (_MSC_VER >= 1200)) && !defined(_MSC_FULL_VER)
+#  error "LZO_CC_MSC: _MSC_FULL_VER is not defined"
 #endif
 #if !defined(__LZO_ARCH_OVERRIDE)
 #if defined(LZO_ARCH_GENERIC)
@@ -637,6 +636,9 @@
 #elif defined(__ia64__) || defined(__ia64) || defined(_M_IA64)
 #  define LZO_ARCH_IA64             1
 #  define LZO_INFO_ARCH             "ia64"
+#elif (UINT_MAX == LZO_0xffffL) && defined(__m32c__)
+#  define LZO_ARCH_M16C             1
+#  define LZO_INFO_ARCH             "m16c"
 #elif defined(__m32r__)
 #  define LZO_ARCH_M32R             1
 #  define LZO_INFO_ARCH             "m32r"
@@ -652,6 +654,9 @@
 #elif defined(__mips__) || defined(__mips) || defined(_MIPS_ARCH) || defined(_M_MRX000)
 #  define LZO_ARCH_MIPS             1
 #  define LZO_INFO_ARCH             "mips"
+#elif (UINT_MAX == LZO_0xffffL) && defined(__MSP430__)
+#  define LZO_ARCH_MSP430           1
+#  define LZO_INFO_ARCH             "msp430"
 #elif defined(__powerpc__) || defined(__powerpc) || defined(__ppc__) || defined(__PPC__) || defined(_M_PPC)
 #  define LZO_ARCH_POWERPC          1
 #  define LZO_INFO_ARCH             "powerpc"
@@ -1013,8 +1018,12 @@ extern "C" {
 #    undef LZO_SIZEOF_LONG_LONG
 #  endif
 #endif
+#if defined(LZO_CFG_NO_LONG_LONG) || defined(__NO_LONG_LONG)
+#  undef LZO_SIZEOF_LONG_LONG
+#endif
 #if !defined(LZO_SIZEOF_VOID_P)
 #if (LZO_ARCH_I086)
+#  define __LZO_WORDSIZE            2
 #  if (LZO_MM_TINY || LZO_MM_SMALL || LZO_MM_MEDIUM)
 #    define LZO_SIZEOF_VOID_P       2
 #  elif (LZO_MM_COMPACT || LZO_MM_LARGE || LZO_MM_HUGE)
@@ -1022,31 +1031,45 @@ extern "C" {
 #  else
 #    error "LZO_MM"
 #  endif
-#elif (LZO_ARCH_AVR || LZO_ARCH_C166 || LZO_ARCH_I086 || LZO_ARCH_MCS51 || LZO_ARCH_MCS251 || LZO_ARCH_Z80)
+#elif (LZO_ARCH_AVR || LZO_ARCH_Z80)
+#  define __LZO_WORDSIZE            1
+#  define LZO_SIZEOF_VOID_P         2
+#elif (LZO_ARCH_C166 || LZO_ARCH_MCS51 || LZO_ARCH_MCS251 || LZO_ARCH_MSP430)
 #  define LZO_SIZEOF_VOID_P         2
 #elif (LZO_ARCH_H8300)
 #  if defined(__NORMAL_MODE__)
+#    define __LZO_WORDSIZE          4
 #    define LZO_SIZEOF_VOID_P       2
 #  elif defined(__H8300H__) || defined(__H8300S__) || defined(__H8300SX__)
+#    define __LZO_WORDSIZE          4
 #    define LZO_SIZEOF_VOID_P       4
 #  else
+#    define __LZO_WORDSIZE          2
 #    define LZO_SIZEOF_VOID_P       2
 #  endif
 #  if (LZO_CC_GNUC && (LZO_CC_GNUC < 0x040000ul)) && (LZO_SIZEOF_INT == 4)
 #    define LZO_SIZEOF_SIZE_T       LZO_SIZEOF_INT
 #    define LZO_SIZEOF_PTRDIFF_T    LZO_SIZEOF_INT
 #  endif
-#elif (LZO_OS_CONSOLE_PS2)
-#  define LZO_SIZEOF_VOID_P         4
+#elif (LZO_ARCH_M16C)
+#  define __LZO_WORDSIZE            2
+#  if defined(__m32c_cpu__) || defined(__m32cm_cpu__)
+#    define LZO_SIZEOF_VOID_P       4
+#  else
+#    define LZO_SIZEOF_VOID_P       2
+#  endif
 #elif (LZO_SIZEOF_LONG == 8) && ((defined(__mips__) && defined(__R5900__)) || defined(__MIPS_PSX2__))
+#  define __LZO_WORDSIZE            8
 #  define LZO_SIZEOF_VOID_P         4
 #elif defined(__LLP64__) || defined(__LLP64) || defined(_LLP64) || defined(_WIN64)
+#  define __LZO_WORDSIZE            8
 #  define LZO_SIZEOF_VOID_P         8
 #elif (LZO_OS_OS400) && defined(__LLP64_IFC__)
-#  define LZO_SIZEOF_VOID_P         8
+#  define LZO_SIZEOF_VOID_P         LZO_SIZEOF_LONG
 #  define LZO_SIZEOF_SIZE_T         LZO_SIZEOF_LONG
 #  define LZO_SIZEOF_PTRDIFF_T      LZO_SIZEOF_LONG
 #elif (LZO_OS_OS400)
+#  define __LZO_WORDSIZE            LZO_SIZEOF_LONG
 #  define LZO_SIZEOF_VOID_P         16
 #  define LZO_SIZEOF_SIZE_T         LZO_SIZEOF_LONG
 #  define LZO_SIZEOF_PTRDIFF_T      LZO_SIZEOF_LONG
@@ -1058,8 +1081,15 @@ extern "C" {
 #  define LZO_SIZEOF_VOID_P         LZO_SIZEOF_LONG
 #endif
 #endif
+#if !defined(LZO_WORDSIZE)
+#  if defined(__LZO_WORDSIZE)
+#    define LZO_WORDSIZE            __LZO_WORDSIZE
+#  else
+#    define LZO_WORDSIZE            LZO_SIZEOF_VOID_P
+#  endif
+#endif
 #if !defined(LZO_SIZEOF_SIZE_T)
-#if (LZO_ARCH_I086)
+#if (LZO_ARCH_I086 || LZO_ARCH_M16C)
 #  define LZO_SIZEOF_SIZE_T         2
 #else
 #  define LZO_SIZEOF_SIZE_T         LZO_SIZEOF_VOID_P
@@ -1083,13 +1113,17 @@ extern "C" {
 #endif
 #endif
 #if !defined(LZO_ABI_BIG_ENDIAN) && !defined(LZO_ABI_LITTLE_ENDIAN) && !defined(LZO_ABI_NEUTRAL_ENDIAN)
-#if (LZO_ARCH_AMD64 || LZO_ARCH_I086 || LZO_ARCH_I386)
+#if (LZO_ARCH_AMD64 || LZO_ARCH_CRIS || LZO_ARCH_I086 || LZO_ARCH_I386 || LZO_ARCH_MSP430)
 #  define LZO_ABI_LITTLE_ENDIAN     1
-#elif (LZO_ARCH_M68K)
+#elif (LZO_ARCH_M68K || LZO_ARCH_S390)
 #  define LZO_ABI_BIG_ENDIAN        1
 #elif 1 && defined(__BIG_ENDIAN__) && !defined(__LITTLE_ENDIAN__)
 #  define LZO_ABI_BIG_ENDIAN        1
 #elif 1 && defined(__LITTLE_ENDIAN__) && !defined(__BIG_ENDIAN__)
+#  define LZO_ABI_LITTLE_ENDIAN     1
+#elif 1 && (LZO_ARCH_MIPS) && defined(__MIPSEB__) && !defined(__MIPSEL__)
+#  define LZO_ABI_BIG_ENDIAN        1
+#elif 1 && (LZO_ARCH_MIPS) && defined(__MIPSEL__) && !defined(__MIPSEB__)
 #  define LZO_ABI_LITTLE_ENDIAN     1
 #endif
 #endif
@@ -1214,7 +1248,10 @@ extern "C" {
 #elif (LZO_CC_MSC && (_MSC_VER >= 1300))
 #  define __lzo_noinline        __declspec(noinline)
 #elif (LZO_CC_MWERKS && (__MWERKS__ >= 0x3200) && (LZO_OS_WIN32 || LZO_OS_WIN64))
-#  define __lzo_noinline        __declspec(noinline)
+#  if defined(__cplusplus)
+#  else
+#    define __lzo_noinline      __declspec(noinline)
+#  endif
 #endif
 #if (defined(__lzo_forceinline) || defined(__lzo_noinline)) && !defined(__lzo_inline)
 #  error "this should not happen"
@@ -1329,7 +1366,7 @@ extern "C" {
 #    define LZO_COMPILE_TIME_ASSERT(e)  {typedef int __lzo_cta_t[1-2*!(e)];}
 #  endif
 #endif
-#if (LZO_OS_DOS16 || LZO_OS_DOS32 || LZO_OS_OS2 || LZO_OS_OS216 || LZO_OS_WIN16 || LZO_OS_WIN32 || LZO_OS_WIN64)
+#if (LZO_ARCH_I086 || LZO_ARCH_I386) && (LZO_OS_DOS16 || LZO_OS_DOS32 || LZO_OS_OS2 || LZO_OS_OS216 || LZO_OS_WIN16 || LZO_OS_WIN32 || LZO_OS_WIN64)
 #  if (LZO_CC_GNUC || LZO_CC_HIGHC || LZO_CC_NDPC || LZO_CC_PACIFICC)
 #  elif (LZO_CC_DMC || LZO_CC_SYMANTECC || LZO_CC_ZORTECHC)
 #    define __lzo_cdecl                 __cdecl
@@ -1368,7 +1405,7 @@ extern "C" {
 #  else
 #    define __lzo_cdecl_sighandler      __cdecl
 #  endif
-#elif (LZO_OS_TOS && (LZO_CC_PUREC || LZO_CC_TURBOC))
+#elif (LZO_ARCH_M68K && LZO_OS_TOS && (LZO_CC_PUREC || LZO_CC_TURBOC))
 #  define __lzo_cdecl                   cdecl
 #endif
 #if !defined(__lzo_cdecl)
@@ -1404,10 +1441,19 @@ extern "C" {
 #elif (LZO_ARCH_AMD64)
 #  define LZO_OPT_AVOID_INT_INDEX   1
 #  define LZO_OPT_AVOID_UINT_INDEX  1
+#  define LZO_OPT_UNALIGNED16       1
+#  define LZO_OPT_UNALIGNED32       1
+#  define LZO_OPT_UNALIGNED64       1
 #elif (LZO_ARCH_ARM && LZO_ARCH_ARM_THUMB)
 #elif (LZO_ARCH_ARM)
 #  define LZO_OPT_AVOID_SHORT       1
 #  define LZO_OPT_AVOID_USHORT      1
+#elif (LZO_ARCH_CRIS)
+#  define LZO_OPT_UNALIGNED16       1
+#  define LZO_OPT_UNALIGNED32       1
+#elif (LZO_ARCH_I386)
+#  define LZO_OPT_UNALIGNED16       1
+#  define LZO_OPT_UNALIGNED32       1
 #elif (LZO_ARCH_IA64)
 #  define LZO_OPT_AVOID_INT_INDEX   1
 #  define LZO_OPT_AVOID_UINT_INDEX  1
@@ -1415,11 +1461,25 @@ extern "C" {
 #elif (LZO_ARCH_M68K)
 #  define LZO_OPT_PREFER_POSTINC    1
 #  define LZO_OPT_PREFER_PREDEC     1
+#  if defined(__mc68020__) && !defined(__mcoldfire__)
+#    define LZO_OPT_UNALIGNED16     1
+#    define LZO_OPT_UNALIGNED32     1
+#  endif
 #elif (LZO_ARCH_MIPS)
 #  define LZO_OPT_AVOID_UINT_INDEX  1
 #elif (LZO_ARCH_POWERPC)
 #  define LZO_OPT_PREFER_PREINC     1
 #  define LZO_OPT_PREFER_PREDEC     1
+#  if defined(LZO_ABI_BIG_ENDIAN)
+#    define LZO_OPT_UNALIGNED16     1
+#    define LZO_OPT_UNALIGNED32     1
+#  endif
+#elif (LZO_ARCH_S390)
+#  define LZO_OPT_UNALIGNED16       1
+#  define LZO_OPT_UNALIGNED32       1
+#  if (LZO_SIZEOF_SIZE_T == 8)
+#    define LZO_OPT_UNALIGNED64     1
+#  endif
 #elif (LZO_ARCH_SH)
 #  define LZO_OPT_PREFER_POSTINC    1
 #  define LZO_OPT_PREFER_PREDEC     1
@@ -1433,6 +1493,11 @@ extern "C" {
 #if defined(LZO_ABI_NEUTRAL_ENDIAN) || defined(LZO_ARCH_GENERIC)
 #  define LZO_CFG_NO_UNALIGNED 1
 #endif
+#endif
+#if defined(LZO_CFG_NO_UNALIGNED)
+#  undef LZO_OPT_UNALIGNED16
+#  undef LZO_OPT_UNALIGNED32
+#  undef LZO_OPT_UNALIGNED64
 #endif
 #if defined(LZO_CFG_NO_INLINE_ASM)
 #elif (LZO_ARCH_I386 && (LZO_OS_DOS32 || LZO_OS_WIN32) && (LZO_CC_DMC || LZO_CC_INTELC || LZO_CC_MSC || LZO_CC_PELLESC))
@@ -1503,7 +1568,7 @@ extern "C" {
 #undef LZO_HAVE_CONFIG_H
 #include "minilzo.h"
 
-#if !defined(MINILZO_VERSION) || (MINILZO_VERSION != 0x2010)
+#if !defined(MINILZO_VERSION) || (MINILZO_VERSION != 0x2020)
 #  error "version mismatch in miniLZO source files"
 #endif
 
@@ -1833,6 +1898,8 @@ lzo_full_align_t;
 
 #endif
 
+#if !defined(MINILZO_CFG_SKIP_LZO_PTR)
+
 LZO_PUBLIC(lzo_uintptr_t)
 __lzo_ptr_linear(const lzo_voidp ptr)
 {
@@ -1864,6 +1931,8 @@ __lzo_align_gap(const lzo_voidp ptr, lzo_uint size)
     assert(n <= s);
     return (unsigned)n;
 }
+
+#endif
 
 /* If you use the LZO library in a product, you *must* keep this
  * copyright string in the executable of your product.
@@ -1969,6 +2038,7 @@ lzo_adler32(lzo_uint32 adler, const lzo_bytep buf, lzo_uint len)
 #undef LZO_DO8
 #undef LZO_DO16
 
+#if !defined(MINILZO_CFG_SKIP_LZO_STRING)
 #undef lzo_memcmp
 #undef lzo_memcpy
 #undef lzo_memmove
@@ -2059,6 +2129,7 @@ LZOLIB_PUBLIC(lzo_hvoid_p, lzo_hmemset) (lzo_hvoid_p s, int c, lzo_hsize_t len)
 #endif
 }
 #undef LZOLIB_PUBLIC
+#endif
 
 #if !defined(__LZO_IN_MINILZO)
 
@@ -2176,6 +2247,8 @@ int __far __pascal LibMain ( int a, short b, short c, long d )
 #endif
 
 #define do_compress         _lzo1x_1_do_compress
+
+#if !defined(MINILZO_CFG_SKIP_LZO1X_1_COMPRESS)
 
 #define LZO_NEED_DICT_H
 #define D_BITS          14
@@ -2460,7 +2533,7 @@ static void DVAL_ASSERT(lzo_xint dv, const lzo_bytep p)
 
 #define DO_COMPRESS     lzo1x_1_compress
 
-static lzo_uint __lzo_noinline
+static __lzo_noinline lzo_uint
 do_compress ( const lzo_bytep in , lzo_uint  in_len,
                     lzo_bytep out, lzo_uintp out_len,
                     lzo_voidp wrkmem )
@@ -2747,6 +2820,8 @@ DO_COMPRESS      ( const lzo_bytep in , lzo_uint  in_len,
     return LZO_E_OK;
 }
 
+#endif
+
 #undef do_compress
 #undef DO_COMPRESS
 #undef LZO_HASH
@@ -2755,6 +2830,8 @@ DO_COMPRESS      ( const lzo_bytep in , lzo_uint  in_len,
 #undef DO_DECOMPRESS
 #define DO_DECOMPRESS       lzo1x_decompress
 
+#if !defined(MINILZO_CFG_SKIP_LZO1X_DECOMPRESS)
+
 #if defined(LZO_TEST_OVERRUN)
 #  if !defined(LZO_TEST_OVERRUN_INPUT)
 #    define LZO_TEST_OVERRUN_INPUT       2
@@ -3244,11 +3321,15 @@ lookbehind_overrun:
     return LZO_E_LOOKBEHIND_OVERRUN;
 #endif
 }
+
+#endif
 
 #define LZO_TEST_OVERRUN
 #undef DO_DECOMPRESS
 #define DO_DECOMPRESS       lzo1x_decompress_safe
 
+#if !defined(MINILZO_CFG_SKIP_LZO1X_DECOMPRESS_SAFE)
+
 #if defined(LZO_TEST_OVERRUN)
 #  if !defined(LZO_TEST_OVERRUN_INPUT)
 #    define LZO_TEST_OVERRUN_INPUT       2
@@ -3738,6 +3819,8 @@ lookbehind_overrun:
     return LZO_E_LOOKBEHIND_OVERRUN;
 #endif
 }
+
+#endif
 
 /***** End of minilzo.c *****/
 

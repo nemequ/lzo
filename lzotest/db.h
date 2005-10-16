@@ -2,13 +2,21 @@
 
    This file is part of the LZO real-time data compression library.
 
-   Copyright (C) 1996-2005 Markus Franz Xaver Johannes Oberhumer
+   Copyright (C) 2005 Markus Franz Xaver Johannes Oberhumer
+   Copyright (C) 2004 Markus Franz Xaver Johannes Oberhumer
+   Copyright (C) 2003 Markus Franz Xaver Johannes Oberhumer
+   Copyright (C) 2002 Markus Franz Xaver Johannes Oberhumer
+   Copyright (C) 2001 Markus Franz Xaver Johannes Oberhumer
+   Copyright (C) 2000 Markus Franz Xaver Johannes Oberhumer
+   Copyright (C) 1999 Markus Franz Xaver Johannes Oberhumer
+   Copyright (C) 1998 Markus Franz Xaver Johannes Oberhumer
+   Copyright (C) 1997 Markus Franz Xaver Johannes Oberhumer
+   Copyright (C) 1996 Markus Franz Xaver Johannes Oberhumer
    All Rights Reserved.
 
    The LZO library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public License as
-   published by the Free Software Foundation; either version 2 of
-   the License, or (at your option) any later version.
+   modify it under the terms of the GNU General Public License,
+   version 2, as published by the Free Software Foundation.
 
    The LZO library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,7 +26,7 @@
    You should have received a copy of the GNU General Public License
    along with the LZO library; see the file COPYING.
    If not, write to the Free Software Foundation, Inc.,
-   59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
    Markus F.X.J. Oberhumer
    <markus@oberhumer.com>
@@ -396,7 +404,7 @@
   0,                            0 },
 #endif
 
-#if defined(HAVE_ZLIB_H)
+#if defined(ALG_ZLIB)
 { "zlib-8/1", M_ZLIB_8_1, ZLIB_MEM_COMPRESS, ZLIB_MEM_DECOMPRESS,
                                 zlib_8_1_compress, 0,
                                 zlib_decompress, 0, 0, 0, 0, 0, 0, 0 },
@@ -426,6 +434,38 @@
                                 zlib_decompress, 0, 0, 0, 0, 0, 0, 0 },
 #endif
 
+#if defined(ALG_BZIP2)
+{ "bzip2/1", M_BZIP2_1, BZIP2_MEM_COMPRESS, BZIP2_MEM_DECOMPRESS,
+                                bzip2_1_compress, 0,
+                                bzip2_decompress, 0, 0, 0, 0, 0, 0, 0 },
+{ "bzip2/2", M_BZIP2_2, BZIP2_MEM_COMPRESS, BZIP2_MEM_DECOMPRESS,
+                                bzip2_2_compress, 0,
+                                bzip2_decompress, 0, 0, 0, 0, 0, 0, 0 },
+{ "bzip2/3", M_BZIP2_3, BZIP2_MEM_COMPRESS, BZIP2_MEM_DECOMPRESS,
+                                bzip2_3_compress, 0,
+                                bzip2_decompress, 0, 0, 0, 0, 0, 0, 0 },
+{ "bzip2/4", M_BZIP2_4, BZIP2_MEM_COMPRESS, BZIP2_MEM_DECOMPRESS,
+                                bzip2_4_compress, 0,
+                                bzip2_decompress, 0, 0, 0, 0, 0, 0, 0 },
+{ "bzip2/5", M_BZIP2_5, BZIP2_MEM_COMPRESS, BZIP2_MEM_DECOMPRESS,
+                                bzip2_5_compress, 0,
+                                bzip2_decompress, 0, 0, 0, 0, 0, 0, 0 },
+{ "bzip2/6", M_BZIP2_6, BZIP2_MEM_COMPRESS, BZIP2_MEM_DECOMPRESS,
+                                bzip2_6_compress, 0,
+                                bzip2_decompress, 0, 0, 0, 0, 0, 0, 0 },
+{ "bzip2/7", M_BZIP2_7, BZIP2_MEM_COMPRESS, BZIP2_MEM_DECOMPRESS,
+                                bzip2_7_compress, 0,
+                                bzip2_decompress, 0, 0, 0, 0, 0, 0, 0 },
+{ "bzip2/8", M_BZIP2_8, BZIP2_MEM_COMPRESS, BZIP2_MEM_DECOMPRESS,
+                                bzip2_8_compress, 0,
+                                bzip2_decompress, 0, 0, 0, 0, 0, 0, 0 },
+{ "bzip2/9", M_BZIP2_9, BZIP2_MEM_COMPRESS, BZIP2_MEM_DECOMPRESS,
+                                bzip2_9_compress, 0,
+                                bzip2_decompress, 0, 0, 0, 0, 0, 0, 0 },
+#endif
+
+
+
 { "memcpy()", M_MEMCPY, 0, 0,   memcpy_x_compress, 0,
                                 memcpy_x_compress, 0, 0, 0, 0, 0, 0, 0 },
 { "memset()", M_MEMSET, 0, 0,   memset_x_compress, 0,
@@ -434,15 +474,15 @@
                                 adler32_x_compress, 0, 0, 0, 0, 0, 0, 0 },
 { "crc32()", M_CRC32, 0, 0,     crc32_x_compress, 0,
                                 crc32_x_compress, 0, 0, 0, 0, 0, 0, 0 },
-#if defined(HAVE_ZLIB_H)
+#if defined(ALG_ZLIB)
 { "z_adler32()", M_Z_ADLER32, 0, 0, zlib_adler32_x_compress, 0,
                                 zlib_adler32_x_compress, 0, 0, 0, 0, 0, 0, 0 },
 { "z_crc32()", M_Z_CRC32, 0, 0, zlib_crc32_x_compress, 0,
                                 zlib_crc32_x_compress, 0, 0, 0, 0, 0, 0, 0 },
 #endif
 
-#if defined(MAINT) && defined(MFX)
-#  include "maint/t_db.ch"
+#if defined(__LZO_PROFESSIONAL__)
+#  include "lzopro/t_db.ch"
 #endif
 
 

@@ -8,16 +8,13 @@
 ##      Markus F.X.J. Oberhumer         <markus@oberhumer.com>
 ##
 ##  Description:
-##      Convert the output of the LZO test program into a nice table.
-##      Option '-b' will print the 'official' LZO benchmark.
+##      Convert the output of the LZO lzotest program into a nice table.
 ##
 ##  Copyright (C) 1996-2005 Markus Franz Xaver Johannes Oberhumer
 ##
 ##---------------------------------------------------------------------------##
 
-$VERSION = '1.01.6';
 $PROG = $0;
-
 require 'ctime.pl';
 
 #
@@ -28,19 +25,15 @@ while ($_ = $ARGV[ $[ ], /^-/) {
     shift(@ARGV);
     /^--$/ && ($opt_last = 1, last);
 
-    /^-b/ && ($opt_bench++, next);
-    /^-f/ && ($opt_force++, next);
-    /^-n/ && ($opt_sort_summary_by_name++, next);
-    /^-r/ && ($opt_sort_summary_by_ratio++, next);
+    /^--sort=name/ && ($opt_sort_summary_by_name++, next);
+    /^--sort=ratio/ && ($opt_sort_summary_by_ratio++, next);
     /^-s/ && ($opt_summary_only++, next);
     /^-t/ && ($opt_clear_time++, next);
-
-    /^-D(.*)/ && ($opt_debug = $1 ? $1 : 1);
 }
 
 
 $alg = '';
-$sep = "+" . ("-" x 72) . "+\n";
+$sep = "+" . ("-" x 76) . "+\n";
 
 $block_size = -1;
 
@@ -49,30 +42,8 @@ $n = 0;
 %average = ();
 %total = ();
 
-$bv_n = 0;
-@bv = (0, 0, 0.0, 0.0, 0.0);
-%bench = ();
-$bench_total = -1;
-
 $lzo_version_string = '';
 $lzo_version_date = '';
-
-
-# benchmark reference values for 100.00
-
-%bench_c = ('LZO1B-1',  1.5770,
-            'LZO1B-9',  0.5905,
-            'LZO1C-1',  1.5325,
-            'LZO1C-9',  0.5885,
-            'LZO1F-1',  1.6545,
-            'LZO1X-1',  1.5980 );
-
-%bench_d = ('LZO1B-1',  4.3815,
-            'LZO1B-9',  4.3950,
-            'LZO1C-1',  4.4030,
-            'LZO1C-9',  4.4085,
-            'LZO1F-1',  4.7695,
-            'LZO1X-1',  4.9070 );
 
 
 # /***********************************************************************
@@ -84,18 +55,9 @@ while (<>) {
     if (/(^|\s)(\d+)\s+block\-size/i) {
         if ($block_size < 0) {
             $block_size = $2;
-            &start($block_size);
+            &intro($block_size);
         } elsif ($block_size != $2) {
             die "$PROG: block-size: $block_size != $2\n";
-        }
-        next;
-    }
-
-    if (/execution\s+time.*\s+(\d+)\s/i) {
-        if ($bench_total < 0) {
-            $bench_total = $1;
-        } elsif ($bench_total != $1) {
-            die "$PROG: execution time: $bench_total != $1\n";
         }
         next;
     }
@@ -113,13 +75,12 @@ while (<>) {
         }
         $line = $3;
         &stats(*line);
-        print "$line\n" if (!$opt_bench && !$opt_summary_only);
+        print "$line\n" if (!$opt_summary_only);
     }
 }
 &footer($1);
 
-&bench() if $opt_bench;
-&summary() unless $opt_bench;
+&summary();
 
 exit(0);
 
@@ -132,7 +93,7 @@ sub stats {
     local (*l) = @_;
     local ($x1, $x2, $x3, $x4, $x5, $x6, $x7, $x8);
 
-    if ($l !~ /^\|\s*(.*)\s+(\d+)\s+(\d+)\s+(\d+)\s+([\d\.]+\s+)?([\d\.]+\s+)?([\d\.]+)\s+([\d\.]+)\s*\|/) {
+    if ($l !~ /^\|\s*(.+?)\s+(\d+)\s+(\d+)\s+(\d+)\s+([\d\.]+\s+)?([\d\.]+\s+)?([\d\.]+)\s+([\d\.]+)\s*\|/) {
         die $_;
     }
 
@@ -143,11 +104,11 @@ sub stats {
     $x6 = ($x2 > 0) ? $x4 *   8.0 / $x2 : 0.0;
     $x7 = $7; $x8 = $8;
 
-    # convert from kB/s to MB/s
+    # convert from kB/s to MB/s (for old versions of lzotest)
     if ($x7 =~ /\.\d\d$/) { $x7 = $x7 / 1000.0; }
     if ($x8 =~ /\.\d\d$/) { $x8 = $x8 / 1000.0; }
 
-    if ($opt_clear_time && !$opt_bench) {
+    if ($opt_clear_time) {
         $x7 = $x8 = 0.0;
     }
 
@@ -156,11 +117,15 @@ sub stats {
     $s[2] += $x4;
     $s[3] += $x5;
     $s[4] += $x6;
-    $s[5] += $x7;
-    $s[6] += $x8;
+    if ($x7 > 0) {
+        $s[5] += 1.0 / $x7; $sn[5] += 1;
+    }
+    if ($x8 > 0) {
+        $s[6] += 1.0/ $x8; $sn[6] += 1;
+    }
 
     $x1 =~ s/\s+$//;
-    $l = sprintf("| %-14s %8d %4d %8d %6.1f %5.2f %9.3f %9.3f |",
+    $l = sprintf("| %-14s %10d %5d %9d %6.1f %5.2f %9.3f %9.3f |",
                     $x1, $x2, $x3, $x4, $x5, $x6, $x7, $x8);
 }
 
@@ -177,15 +142,16 @@ sub header {
     # reset stats
     $n = 0;
     @s = (0, 0, 0, 0.0, 0.0, 0.0, 0.0);
+    @sn = (0, 0, 0, 0, 0, 0, 0);
 
-    return if $opt_bench;
+    return if $opt_summary_only;
 
     print "\n$alg\n\n";
     print $sep;
-print <<Header;
-| File Name        Length  CxB   ComLen  %Remn  Bits  Com MB/s  Dec MB/s |
-| ---------        ------  ---   ------  -----  ----  --------  -------- |
-Header
+print <<EndOfString;
+| File Name          Length   CxB    ComLen  Ratio% Bits  Com MB/s  Dec MB/s |
+| ---------          ------   ---    ------  -----  ----  --------  -------- |
+EndOfString
 }
 
 
@@ -195,57 +161,36 @@ Header
 
 sub footer {
     local ($t) = @_;
-    local ($bv);
-    local ($c, $d);
+    local ($shm5, $shm6);
 
     return unless $alg;
     die if $n <= 0;
     die if $s[0] <= 0;
 
+    # harmonic mean
+    $shm5 = $s[5] > 0 ? $sn[5] / $s[5] : 0.0;
+    $shm6 = $s[6] > 0 ? $sn[6] / $s[6] : 0.0;
+
     push(@algs,$alg);
 
     $average{$alg} =
-        sprintf("| %-14s %8d %4d %8d %6.1f %5.2f %9.3f %9.3f |\n",
+        sprintf("| %-14s %10d %5d %9d %6.1f %5.2f %9.3f %9.3f |\n",
             "Average", $s[0]/$n, $s[1]/$n, $s[2]/$n,
             $s[3]/$n, $s[4]/$n,
-            $s[5]/$n, $s[6]/$n );
+            $shm5, $shm6);
 
     $total{$alg} =
-        sprintf("| %-14s %8d %4d %8d %6.1f %5.2f %9.3f %9.3f |\n",
+        sprintf("| %-14s %10d %5d %9d %6.1f %5.2f %9.3f %9.3f |\n",
             "Total", $s[0], $s[1], $s[2],
             $s[2]/$s[0]*100, $s[2]/$s[0]*8,
-            $s[5]/$n, $s[6]/$n );
+            $shm5, $shm6);
 
-    if ($opt_bench) {
+    return if $opt_summary_only;
 
-        $c = $bench_c{$alg};
-        $d = $bench_d{$alg};
-
-        ($c > 0 && $d > 0) || die "$PROG: invalid benchmark algorithm $alg\n";
-        $n == 14 || die "$PROG: invalid benchmark suite\n";
-        $s[0] == 3141622 || die "$PROG: invalid benchmark length $s[0]\n";
-
-        $bv = ((($s[5]/$c + $s[6]/$d) / $n) / 2.0);
-
-        $bench{$alg} =
-            sprintf("| %-14s %10d %10d %10.3f %10.3f %11.2f |\n",
-                "Benchmark", $s[0], $s[2],
-                $s[5]/$n, $s[6]/$n , $bv);
-
-        $bv_n++;
-        $bv[0] += $s[0];
-        $bv[1] += $s[2];
-        $bv[2] += $s[5]/$n;
-        $bv[3] += $s[6]/$n;
-        $bv[4] += $bv;
-
-    } else {
-
-        print $sep;
-        print $average{$alg};
-        print $total{$alg};
-        print $sep, "\n";
-    }
+    print $sep;
+    print $average{$alg};
+    print $total{$alg};
+    print $sep, "\n";
 }
 
 
@@ -282,40 +227,6 @@ sub cmp_by_ratio {
 # //
 # ************************************************************************/
 
-sub bench {
-    local ($l);
-    local (@k);
-
-    die if $bv_n <= 0;
-    die if $bv[0] <= 0;
-    if (!$opt_force) {
-        $bench_total >= 1200 || die "$PROG: benchmark execution time $bench_total is too short\n";
-    }
-
-    @k = @algs;
-
-    print $sep;
-print <<Bench;
-| Algorithm          Length     ComLen   Com MB/s   Dec MB/s   LZO bench |
-| ---------          ------     ------   --------   --------   --------- |
-Bench
-
-    for (@k) {
-        $l = $bench{$_};
-        $l =~ s/Benchmark[\s]{5}/sprintf("%-14s",$_)/e;
-        print $l;
-    }
-    print $sep;
-    printf("| %-14s %10d %10d %-10s %-10s %11.2f |\n",
-        "OVERALL", $bv[0], $bv[1], "", "", $bv[4]/$bv_n);
-    print $sep;
-}
-
-
-# /***********************************************************************
-# //
-# ************************************************************************/
-
 sub summary {
     local ($l);
     local (@k);
@@ -332,10 +243,10 @@ sub summary {
     print "\n\n";
     print "Summary of average values\n\n";
     print $sep;
-print <<Summary;
-| Algorithm        Length  CxB   ComLen  %Remn  Bits  Com MB/s  Dec MB/s |
-| ---------        ------  ---   ------  -----  ----  --------  -------- |
-Summary
+print <<EndOfString;
+| Algorithm          Length   CxB    ComLen  Ratio% Bits  Com MB/s  Dec MB/s |
+| ---------          ------   ---    ------  -----  ----  --------  -------- |
+EndOfString
 
     for (@k) {
         $l = $average{$_};
@@ -358,10 +269,10 @@ Summary
     print "\n\n";
     print "Summary of total values\n\n";
     print $sep;
-print <<Summary;
-| Algorithm        Length  CxB   ComLen  %Remn  Bits  Com MB/s  Dec MB/s |
-| ---------        ------  ---   ------  -----  ----  --------  -------- |
-Summary
+print <<EndOfString;
+| Algorithm          Length   CxB    ComLen  Ratio% Bits  Com MB/s  Dec MB/s |
+| ---------          ------   ---    ------  -----  ----  --------  -------- |
+EndOfString
 
     for (@k) {
         $l = $total{$_};
@@ -369,17 +280,6 @@ Summary
         print $l;
     }
     print $sep;
-
-
-print <<Summary;
-
-
-Notes:
-- CxB is the number of blocks
-- MB/s is the speed measured in 1,000,000 uncompressed bytes per second
-- all averages are calculated from the un-rounded values
-
-Summary
 }
 
 
@@ -387,19 +287,19 @@ Summary
 # //
 # ************************************************************************/
 
-sub start {
+sub intro {
     local ($bs) = @_;
     local ($v, $t, $x);
     local ($u, $uname_m, $uname_s, $uname_r);
 
     $t = &ctime(time); chop($t);
-    $t = sprintf("%-51s |", $t);
+    $t = sprintf("%-55s |", $t);
 
     $v='';
     if ($lzo_version_string) {
         $v = $lzo_version_string;
         $v .= ', ' . $lzo_version_date if $lzo_version_date;
-        $v = sprintf("%-51s |", $v);
+        $v = sprintf("%-55s |", $v);
         $v = sprintf("| LZO version      : %s\n", $v);
     }
 
@@ -408,7 +308,7 @@ sub start {
     } else {
         $x = sprintf("%d (= %.3f kB)", $bs, $bs / 1024.0);
     }
-    $x = sprintf("%-51s |", $x);
+    $x = sprintf("%-55s |", $x);
 
     $u='';
     if (1 == 1) {
@@ -419,39 +319,29 @@ sub start {
             $u = $uname_s;
             $u .= ' ' . $uname_r if $uname_r;
             $u .= ' ' . $uname_m;
-            $u = sprintf("%-51s |", $u);
+            $u = sprintf("%-55s |", $u);
             $u = sprintf("| Operating system : %s\n", $u);
         }
     }
+    print <<EndOfString;
 
-    if ($opt_bench) {
-        print <<Start;
-
-+------------------------------------------------------------------------+
-| LZO 'OFFICIAL' BENCHMARK                                               |
-| ========================                                               |
-| Time of run      : $t
-$v$u| Test suite       : Calgary Corpus Suite                                |
-| Files in suite   : 14                                                  |
-| Context length   : $x
-+------------------------------------------------------------------------+
-
-
-Start
-    } else {
-        print <<Start;
-
-+------------------------------------------------------------------------+
-| DATA COMPRESSION TEST                                                  |
-| =====================                                                  |
++----------------------------------------------------------------------------+
+| DATA COMPRESSION TEST                                                      |
+| =====================                                                      |
 | Time of run      : $t
 $v$u| Context length   : $x
-| Timing accuracy  : One part in 100                                     |
-+------------------------------------------------------------------------+
++----------------------------------------------------------------------------+
 
 
-Start
-    }
+Notes:
+- CxB is the number of independent blocks a file was splitted
+- MB/s is the speed measured in 1,000,000 uncompressed bytes per second
+- all averages are calculated from the un-rounded values
+- the average ratio & bits are calculated by the arithmetic mean
+- the average speed is calculated by the harmonic mean
+
+
+EndOfString
 }
 
 __END__
@@ -465,5 +355,6 @@ __END__
 | Compiler flags   : -mf -5r -oneatx                                     |
 | Test suite       : Calgary Corpus Suite                                |
 | Files in suite   : 14                                                  |
+| Timing accuracy  : One part in 100                                     |
 
 

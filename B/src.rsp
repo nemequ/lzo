@@ -1,4 +1,3 @@
-src/lzo1x_d1.c
 src/lzo1.c
 src/lzo1_99.c
 src/lzo1a.c
@@ -44,6 +43,7 @@ src/lzo1x_1k.c
 src/lzo1x_1l.c
 src/lzo1x_1o.c
 src/lzo1x_9x.c
+src/lzo1x_d1.c
 src/lzo1x_d2.c
 src/lzo1x_d3.c
 src/lzo1x_o.c

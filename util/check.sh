@@ -28,6 +28,7 @@ methods="$methods 111 112 115"
 methods="$methods 921 931 901 911"
 methods="$methods 902 912 942 962 972 982 992"
 ##methods="71 972"
+##methods="1101 1102 1103 1104 1105 1106 1107"
 
 LFLAGS="-q -T -n2 -S"
 LFLAGS="-q -T -n2"

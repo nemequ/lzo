@@ -6,7 +6,7 @@
 ##  See http://www.gnu.org/software/shtool/ for more information.
 ##  See ftp://ftp.gnu.org/gnu/shtool/ for latest version.
 ##
-##  Version:  2.0.2 (15-Jun-2005)
+##  Version:  2.0.3 (02-Oct-2005)
 ##  Contents: all available modules
 ##
 
@@ -65,7 +65,7 @@ if [ $# -eq 0 ]; then
     exit 1
 fi
 if [ ".$1" = ".-h" ] || [ ".$1" = ".--help" ]; then
-    echo "This is GNU shtool, version 2.0.2 (15-Jun-2005)"
+    echo "This is GNU shtool, version 2.0.3 (02-Oct-2005)"
     echo "Copyright (c) 1994-2005 Ralf S. Engelschall <rse@engelschall.com>"
     echo "Report bugs to <bug-shtool@gnu.org>"
     echo ''
@@ -132,7 +132,7 @@ if [ ".$1" = ".-h" ] || [ ".$1" = ".--help" ]; then
     exit 0
 fi
 if [ ".$1" = ".-v" ] || [ ".$1" = ".--version" ]; then
-    echo "GNU shtool 2.0.2 (15-Jun-2005)"
+    echo "GNU shtool 2.0.3 (02-Oct-2005)"
     exit 0
 fi
 if [ ".$1" = ".-r" ] || [ ".$1" = ".--recreate" ]; then
@@ -941,6 +941,14 @@ mdate )
     LANG=C;    export LANG
     LC_ALL=C;  export LC_ALL
     LC_TIME=C; export LC_TIME
+
+    #   GNU ls changes its time format in response to the TIME_STYLE
+    #   variable. Since we cannot assume "unset" works, revert this
+    #   variable to its documented default.
+    if [ ".$TIME_STYLE" != . ]; then
+        TIME_STYLE=posix-long-iso
+        export TIME_STYLE
+    fi
 
     #   get the extended ls output of the file or directory.
     if /bin/ls -L /dev/null >/dev/null 2>&1; then
@@ -2609,13 +2617,14 @@ platform )
                 i386 ) AC="iX86" ;;
             esac
             AP="${AC}"
-            AT=`(/sbin/sysctl -n hw.model) 2>&1`
-            case "${AT}" in
-                *"Xeon"* | *"Pentium Pro"* | *"Cyrix 6x86MX"* | *"Pentium II"* | *"Pentium III"* | *"Pentium 4"* | *"Celeron"* ) AT="i686" ;;
-                *"Pentium"* ) AT="i586" ;; *"i486[SD]X"* | *"Cyrix 486"* | *"Cyrix [56]x86"* | *"Blue Lightning" | *"Cyrix 486S/DX" ) AT="i486" ;;
-                *"i386[SD]X"* | *"NexGen 586"* ) AT="i386" ;;
-                * ) AT="${AP}" ;;
-            esac
+            AT="${AP}"
+            if [ ".${AT}" = ".iX86" ]; then
+                case "`(/sbin/sysctl -n hw.model) 2>&1`" in
+                    *"Xeon"* | *"Pentium Pro"* | *"Cyrix 6x86MX"* | *"Pentium II"* | *"Pentium III"* | *"Pentium 4"* | *"Celeron"* ) AT="i686" ;;
+                    *"Pentium"* ) AT="i586" ;; *"i486[SD]X"* | *"Cyrix 486"* | *"Cyrix [56]x86"* | *"Blue Lightning" | *"Cyrix 486S/DX" ) AT="i486" ;;
+                    *"i386[SD]X"* | *"NexGen 586"* ) AT="i386" ;;
+                esac
+            fi
             #   determine system
             r=`echo "${UNAME_RELEASE}" |\
                sed -e 's;[()];;' -e 's/\(-.*\)$/[\1]/'`
@@ -2681,7 +2690,7 @@ platform )
             v_kern=`echo "${UNAME_RELEASE}" |\
                 sed -e 's/^\([0-9][0-9]*\.[0-9][0-9]*\).*/\1/'`
             v_libc=`(strings /lib/libc.so.* | grep '^GLIBC_' | sed -e 's/^GLIBC_//' |\
-                sort -n | sed -n -e '$p' | sed -e 's/^\([0-9][0-9]*\.[0-9][0-9]*\).*/\1/') 2>/dev/null`
+                env -i sort -n | sed -n -e '$p' | sed -e 's/^\([0-9][0-9]*\.[0-9][0-9]*\).*/\1/') 2>/dev/null`
             ST="GNU/<Linux >${v_libc}/<${v_kern}>"
             if [ -f /etc/lsb-release ]; then
                 eval `( . /etc/lsb-release
@@ -2694,7 +2703,7 @@ platform )
             if [ ".$SP" = . ]; then
                 for tagfile in x \
                     `cd /etc && \
-                    /bin/ls *[_-]release *[_-]version 2>/dev/null | sort | \
+                    /bin/ls *[_-]release *[_-]version 2>/dev/null | env -i sort | \
                     sed -e '/^redhat-release$/d' -e '/^lsb-release$/d'; \
                     echo redhat-release lsb-release`
                 do
@@ -2715,16 +2724,16 @@ platform )
                                 n="<R>ed <H>at <L>inux"
                             fi
                             ;;
-                        debian            ) n="Debian[ GNU/Linux]"        ;;
-                        ubuntu            ) n="Ubuntu[ GNU/Linux]"        ;;
-                        fedora            ) n="<Fedora> Core[ GNU/Linux]" ;;
-                        suse              ) n="SuSE[ Linux]"              ;;
-                        mandrake|mandriva ) n="Mandriva[ Linux]"          ;;
-                        gentoo            ) n="Gentoo[ GNU/Linux]"        ;;
-                        slackware         ) n="Slackware[ Linux]"         ;;
-                        turbolinux        ) n="TurboLinux"                ;;
-                        unitedlinux       ) n="UnitedLinux"               ;;
-                        *                 ) n="${n}[ GNU/Linux]"          ;;
+                        debian             ) n="Debian[ GNU/Linux]"        ;;
+                        ubuntu             ) n="Ubuntu[ GNU/Linux]"        ;;
+                        fedora             ) n="<Fedora> Core[ GNU/Linux]" ;;
+                        suse               ) n="SuSE[ Linux]"              ;;
+                        mandrake*|mandriva ) n="Mandriva[ Linux]"          ;;
+                        gentoo             ) n="Gentoo[ GNU/Linux]"        ;;
+                        slackware          ) n="Slackware[ Linux]"         ;;
+                        turbolinux         ) n="TurboLinux"                ;;
+                        unitedlinux        ) n="UnitedLinux"               ;;
+                        *                  ) n="${n}[ GNU/Linux]"          ;;
                     esac
                     case "$n" in
                         *"<"*">"* ) SP="$n <$v>" ;;
@@ -3772,7 +3781,7 @@ version )
                 echo >>$file "##  [automatically generated and maintained by GNU shtool]"
                 echo >>$file "##"
                 echo >>$file ""
-                echo >>$file "my \$${prefix}version = {"
+                echo >>$file "our \$${prefix}version = {"
                 echo >>$file "    'v_hex'   => ${vHex},"
                 echo >>$file "    'v_short' => \"${vShort}\","
                 echo >>$file "    'v_long'  => \"${vLong}\","

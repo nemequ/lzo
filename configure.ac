@@ -7,9 +7,8 @@
 #  All Rights Reserved.
 #
 #  The LZO library is free software; you can redistribute it and/or
-#  modify it under the terms of the GNU General Public License as
-#  published by the Free Software Foundation; either version 2 of
-#  the License, or (at your option) any later version.
+#  modify it under the terms of the GNU General Public License,
+#  version 2, as published by the Free Software Foundation.
 #
 #  The LZO library is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -19,7 +18,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with the LZO library; see the file COPYING.
 #  If not, write to the Free Software Foundation, Inc.,
-#  59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+#  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 #  Markus F.X.J. Oberhumer
 #  <markus@oberhumer.com>
@@ -34,10 +33,10 @@
 AC_COPYRIGHT([Copyright (C) 1996-2005 Markus Franz Xaver Johannes Oberhumer.
 All Rights Reserved.
 This configure script may be copied, distributed and modified under the
-terms of the GNU General Public License; see COPYING for more details.])
+terms of the GNU General Public License v2; see COPYING for more details.])
 
 AC_PREREQ(2.59)
-AC_INIT([lzo],[2.01],[markus@oberhumer.com])
+AC_INIT([lzo],[2.02],[markus@oberhumer.com])
 AC_MSG_NOTICE([Configuring LZO $PACKAGE_VERSION])
 AC_CONFIG_SRCDIR(src/lzo_init.c)
 AC_CONFIG_AUX_DIR(autoconf)
@@ -200,9 +199,8 @@ cat <<EOF
    All Rights Reserved.
 
    The LZO library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public License as
-   published by the Free Software Foundation; either version 2 of
-   the License, or (at your option) any later version.
+   modify it under the terms of the GNU General Public License,
+   version 2, as published by the Free Software Foundation.
 
    The LZO library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of

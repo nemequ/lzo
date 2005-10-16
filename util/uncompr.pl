@@ -22,7 +22,7 @@ while ($i < 65536) {
 }
 
 for $i (1,2,4,8,16,32,64) {
-    $name = sprintf("u%04d.fil",$i);
+    $name = sprintf("u%04d.dat",$i);
     open(OUTFILE,">$name") || die "$0: cannot open '$name': $!";
     binmode(OUTFILE);
     print OUTFILE substr($x,0,$i*1024);
