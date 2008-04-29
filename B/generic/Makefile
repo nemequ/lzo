@@ -1,6 +1,6 @@
-# Copyright (C) 1996-2005 Markus F.X.J. Oberhumer
+# Copyright (C) 1996-2008 Markus F.X.J. Oberhumer
 #
-# this is modelled after build.sh; needs GNU make 3.80
+# this is modelled after build.sh; needs GNU make 3.80 or better
 
 SHELL = /bin/sh
 
@@ -52,7 +52,7 @@ $(BLIB): $(BLIB_OBJECTS) $(LZO_EXTRA_OBJECTS)
 
 # dynamically construct object rules
 define BLIB_OBJECT_template
-    $(call __object_filename,$(1)) : $(1) ; $(CC) $(CF) $(LZO_EXTRA_CPPFLAGS) $(LZO_EXTRA_CFLAGS) -c $$<
+    $(call __object_filename,$(1)) : $(1) ; $$(CC) $$(CF) $$(LZO_EXTRA_CPPFLAGS) $$(LZO_EXTRA_CFLAGS) -c $$<
 endef
 $(foreach s,$(BLIB_SOURCES),$(eval $(call BLIB_OBJECT_template,$(s))))
 

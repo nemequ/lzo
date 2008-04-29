@@ -2,6 +2,9 @@
 
    This file is part of the LZO real-time data compression library.
 
+   Copyright (C) 2008 Markus Franz Xaver Johannes Oberhumer
+   Copyright (C) 2007 Markus Franz Xaver Johannes Oberhumer
+   Copyright (C) 2006 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2005 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2004 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2003 Markus Franz Xaver Johannes Oberhumer
@@ -15,8 +18,9 @@
    All Rights Reserved.
 
    The LZO library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public License,
-   version 2, as published by the Free Software Foundation.
+   modify it under the terms of the GNU General Public License as
+   published by the Free Software Foundation; either version 2 of
+   the License, or (at your option) any later version.
 
    The LZO library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -958,7 +962,7 @@ void print_totals ( void )
         unsigned long n = total_n > 0 ? total_n : 1;
         const char *t1 = "-------";
         const char *t2 = total_method_names == 1 ? total_method_name : "";
-#if 1 && defined(__ACCLIB_UCLOCK_CH_INCLUDED)
+#if 1 && defined(__ACCLIB_PCLOCK_CH_INCLUDED)
         char uclock_mode[32+1];
         sprintf(uclock_mode, "[clock=%d]", uch.mode);
         t1 = uclock_mode;
@@ -1407,11 +1411,11 @@ void usage ( const char *name, int exit_code, lzo_bool show_methods )
 
     if (show_methods)
     {
-#if defined(__ACCLIB_UCLOCK_CH_INCLUDED)
+#if defined(__ACCLIB_PCLOCK_CH_INCLUDED)
         lzo_uclock_t t_dummy;
         lzo_uclock_read(&uch, &t_dummy);
         (void) lzo_uclock_get_elapsed(&uch, &t_dummy, &t_dummy);
-        fprintf(f,"\nAll timings are recorded using uclock mode %d.\n", uch.mode);
+        fprintf(f,"\nAll timings are recorded using uclock mode %d %s.\n", uch.mode, uch.name);
 #endif
         fprintf(f,"\n\n");
         fprintf(f,"The following compression methods are available:\n");
@@ -1484,8 +1488,9 @@ void license(void)
 #else
 fprintf(f,
 "   The LZO library is free software; you can redistribute it and/or\n"
-"   modify it under the terms of the GNU General Public License,\n"
-"   version 2, as published by the Free Software Foundation.\n"
+"   modify it under the terms of the GNU General Public License as\n"
+"   published by the Free Software Foundation; either version 2 of\n"
+"   the License, or (at your option) any later version.\n"
 "\n"
 "   The LZO library is distributed in the hope that it will be useful,\n"
 "   but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
@@ -1835,7 +1840,7 @@ static int do_option(int optc)
         if (!mfx_optarg || !is_digit(mfx_optarg[0]))
             return optc;
         opt_uclock = atoi(mfx_optarg);
-#if defined(__ACCLIB_UCLOCK_CH_INCLUDED)
+#if defined(__ACCLIB_PCLOCK_CH_INCLUDED)
         if (opt_uclock > 0)
             uch.mode = opt_uclock;
 #endif
@@ -1901,13 +1906,13 @@ int __lzo_cdecl_main main(int argc, char *argv[])
 #if defined(__LZO_PROFESSIONAL__)
     printf("\nLZO Professional real-time data compression library (v%s, %s).\n",
            lzo_version_string(), lzo_version_date());
-    printf("Copyright (C) 1996-2005 Markus Franz Xaver Johannes Oberhumer\nAll Rights Reserved.\n\n");
+    printf("Copyright (C) 1996-2008 Markus Franz Xaver Johannes Oberhumer\nAll Rights Reserved.\n\n");
 #elif defined(LZOTEST_USE_DYNLOAD)
 #  include "dynload/init.ch"
 #else
     printf("\nLZO real-time data compression library (v%s, %s).\n",
            lzo_version_string(), lzo_version_date());
-    printf("Copyright (C) 1996-2005 Markus Franz Xaver Johannes Oberhumer\nAll Rights Reserved.\n\n");
+    printf("Copyright (C) 1996-2008 Markus Franz Xaver Johannes Oberhumer\nAll Rights Reserved.\n\n");
 #endif
 
 
@@ -1936,7 +1941,7 @@ int __lzo_cdecl_main main(int argc, char *argv[])
 #  else
     opt_max_data_len = 14 * 1024L * 1024L;
 #  endif
-    /* reduce memory requirements for ancient 640kB DOS real-mode */
+    /* reduce memory requirements for ancient 16-bit DOS 640kB real-mode */
     if (ACC_MM_AHSHIFT != 3) {
         opt_max_data_len = 16 * 1024L;
     }

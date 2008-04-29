@@ -2,6 +2,9 @@
 
    This file is part of the LZO real-time data compression library.
 
+   Copyright (C) 2008 Markus Franz Xaver Johannes Oberhumer
+   Copyright (C) 2007 Markus Franz Xaver Johannes Oberhumer
+   Copyright (C) 2006 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2005 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2004 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2003 Markus Franz Xaver Johannes Oberhumer
@@ -15,8 +18,9 @@
    All Rights Reserved.
 
    The LZO library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public License,
-   version 2, as published by the Free Software Foundation.
+   modify it under the terms of the GNU General Public License as
+   published by the Free Software Foundation; either version 2 of
+   the License, or (at your option) any later version.
 
    The LZO library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -48,6 +52,9 @@ __lzo_ptr_linear(const lzo_voidp ptr)
 
 #if (LZO_ARCH_I086)
     p = (((lzo_uintptr_t)(ACC_PTR_FP_SEG(ptr))) << (16 - ACC_MM_AHSHIFT)) + (ACC_PTR_FP_OFF(ptr));
+#elif (LZO_MM_PVP)
+    p = (lzo_uintptr_t) (ptr);
+    p = (p << 3) | (p >> 61);
 #else
     p = (lzo_uintptr_t) PTR_LINEAR(ptr);
 #endif
@@ -74,7 +81,7 @@ __lzo_align_gap(const lzo_voidp ptr, lzo_uint size)
 
     assert(size > 0);
     assert((long)n >= 0);
-    assert(n <= s);
+    assert(n <= size);
     return (unsigned)n;
 }
 

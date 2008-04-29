@@ -2,6 +2,11 @@
 User visible changes for LZO -- a real-time data compression library
 ============================================================================
 
+Changes in 2.03 (30 Apr 2008)
+  * Updated the ELF assembler sources to mark the stack as non-executable.
+  * Fixed a HP-UX 11 build issue with Itanium in ILP32 mode.
+  * Updated the configure system.
+
 Changes in 2.02 (17 Oct 2005)
   * Updated the build and Autoconf scripts to fix some reported
     compilation problems.

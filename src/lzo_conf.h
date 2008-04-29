@@ -2,6 +2,9 @@
 
    This file is part of the LZO real-time data compression library.
 
+   Copyright (C) 2008 Markus Franz Xaver Johannes Oberhumer
+   Copyright (C) 2007 Markus Franz Xaver Johannes Oberhumer
+   Copyright (C) 2006 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2005 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2004 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2003 Markus Franz Xaver Johannes Oberhumer
@@ -15,8 +18,9 @@
    All Rights Reserved.
 
    The LZO library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public License,
-   version 2, as published by the Free Software Foundation.
+   modify it under the terms of the GNU General Public License as
+   published by the Free Software Foundation; either version 2 of
+   the License, or (at your option) any later version.
 
    The LZO library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -53,8 +57,17 @@
 #if defined(LZO_CFG_NO_UNALIGNED)
 #  define ACC_CFG_NO_UNALIGNED 1
 #endif
+#if defined(LZO_ARCH_GENERIC)
+#  define ACC_ARCH_GENERIC 1
+#endif
+#if defined(LZO_ABI_NEUTRAL_ENDIAN)
+#  define ACC_ABI_NEUTRAL_ENDIAN 1
+#endif
 #if defined(LZO_HAVE_CONFIG_H)
 #  define ACC_CONFIG_NO_HEADER 1
+#endif
+#if defined(LZO_CFG_EXTRA_CONFIG_HEADER)
+#  include LZO_CFG_EXTRA_CONFIG_HEADER
 #endif
 #if defined(__LZOCONF_H) || defined(__LZOCONF_H_INCLUDED)
 #  error "include this file first"
@@ -83,6 +96,11 @@
 #  pragma warning(disable: 4820)
    /* avoid warnings about inlining */
 #  pragma warning(disable: 4514 4710 4711)
+#endif
+
+#if (LZO_CC_SUNPROC)
+#  pragma error_messages(off,E_END_OF_LOOP_CODE_NOT_REACHED)
+#  pragma error_messages(off,E_LOOP_NOT_ENTERED_AT_TOP)
 #endif
 
 

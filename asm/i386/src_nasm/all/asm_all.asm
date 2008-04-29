@@ -2,6 +2,9 @@
 ;
 ;  This file is part of the LZO real-time data compression library.
 ;
+;  Copyright (C) 2008 Markus Franz Xaver Johannes Oberhumer
+;  Copyright (C) 2007 Markus Franz Xaver Johannes Oberhumer
+;  Copyright (C) 2006 Markus Franz Xaver Johannes Oberhumer
 ;  Copyright (C) 2005 Markus Franz Xaver Johannes Oberhumer
 ;  Copyright (C) 2004 Markus Franz Xaver Johannes Oberhumer
 ;  Copyright (C) 2003 Markus Franz Xaver Johannes Oberhumer
@@ -15,8 +18,9 @@
 ;  All Rights Reserved.
 ;
 ;  The LZO library is free software; you can redistribute it and/or
-;  modify it under the terms of the GNU General Public License,
-;  version 2, as published by the Free Software Foundation.
+;  modify it under the terms of the GNU General Public License as
+;  published by the Free Software Foundation; either version 2 of
+;  the License, or (at your option) any later version.
 ;
 ;  The LZO library is distributed in the hope that it will be useful,
 ;  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -42,6 +46,9 @@
 %define globalf(x) global x
 %endif
 bits 32
+%ifidni __OUTPUT_FORMAT__,elf
+section .note.GNU-stack noalloc noexec nowrite progbits
+%endif
 %ifidni __OUTPUT_FORMAT__,obj
 segment _TEXT class=CODE public use32 flat align=16
 %else

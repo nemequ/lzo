@@ -1,9 +1,9 @@
 ## Process this file with automake to create Makefile.in
 #
-# Copyright (C) 1996-2005 Markus F.X.J. Oberhumer
+# Copyright (C) 1996-2008 Markus F.X.J. Oberhumer
 #
 
-AUTOMAKE_OPTIONS = 1.9.5 gnu
+AUTOMAKE_OPTIONS = 1.9.6 gnu
 
 SUBDIRS = include src lzotest examples tests minilzo
 

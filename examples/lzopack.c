@@ -2,6 +2,9 @@
 
    This file is part of the LZO real-time data compression library.
 
+   Copyright (C) 2008 Markus Franz Xaver Johannes Oberhumer
+   Copyright (C) 2007 Markus Franz Xaver Johannes Oberhumer
+   Copyright (C) 2006 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2005 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2004 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2003 Markus Franz Xaver Johannes Oberhumer
@@ -15,8 +18,9 @@
    All Rights Reserved.
 
    The LZO library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public License,
-   version 2, as published by the Free Software Foundation.
+   modify it under the terms of the GNU General Public License as
+   published by the Free Software Foundation; either version 2 of
+   the License, or (at your option) any later version.
 
    The LZO library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -205,7 +209,8 @@ int do_compress(FILE *fi, FILE *fo, int level, lzo_uint block_size)
             break;
 
         /* update checksum */
-        checksum = lzo_adler32(checksum, in, in_len);
+        if (flags & 1)
+            checksum = lzo_adler32(checksum, in, in_len);
 
         /* clear wrkmem (not needed, only for debug/benchmark purposes) */
         if (opt_debug)
@@ -245,7 +250,8 @@ int do_compress(FILE *fi, FILE *fo, int level, lzo_uint block_size)
     xwrite32(fo, 0);
 
     /* write checksum */
-    xwrite32(fo, checksum);
+    if (flags & 1)
+        xwrite32(fo, checksum);
 
     r = 0;
 err:
@@ -436,7 +442,7 @@ static FILE *xopen_fi(const char *name)
         if (!is_regular)
         {
             printf("%s: %s is not a regular file\n", progname, name);
-            fclose(fp);
+            fclose(fp); fp = NULL;
             exit(1);
         }
     }
@@ -453,10 +459,10 @@ static FILE *xopen_fo(const char *name)
 #if 0
     /* this is an example program, so make sure we don't overwrite a file */
     fp = fopen(name, "rb");
-    if (f != NULL)
+    if (fp != NULL)
     {
         printf("%s: file %s already exists -- not overwritten\n", progname, name);
-        fclose(f);
+        fclose(fp); fp = NULL;
         exit(1);
     }
 #endif
@@ -515,7 +521,7 @@ int __lzo_cdecl_main main(int argc, char *argv[])
 
     printf("\nLZO real-time data compression library (v%s, %s).\n",
            lzo_version_string(), lzo_version_date());
-    printf("Copyright (C) 1996-2005 Markus Franz Xaver Johannes Oberhumer\nAll Rights Reserved.\n\n");
+    printf("Copyright (C) 1996-2008 Markus Franz Xaver Johannes Oberhumer\nAll Rights Reserved.\n\n");
 
 #if 0
     printf(
@@ -544,7 +550,7 @@ int __lzo_cdecl_main main(int argc, char *argv[])
     opt_block_size = 256 * 1024L;
 
 #if defined(ACC_MM_AHSHIFT)
-    /* reduce memory requirements for ancient 640kB DOS real-mode */
+    /* reduce memory requirements for ancient 16-bit DOS 640kB real-mode */
     if (ACC_MM_AHSHIFT != 3)
         opt_block_size = 16 * 1024L;
 #endif
@@ -599,8 +605,7 @@ int __lzo_cdecl_main main(int argc, char *argv[])
             if (r == 0)
                 printf("%s: %s tested ok (%lu -> %lu bytes)\n",
                         progname, in_name, total_in, total_out);
-            fclose(fi);
-            fi = NULL;
+            xclose(fi); fi = NULL;
         }
     }
     else if (opt_decompress)
@@ -626,8 +631,8 @@ int __lzo_cdecl_main main(int argc, char *argv[])
                     progname, total_in, total_out);
     }
 
-    xclose(fi);
-    xclose(fo);
+    xclose(fi); fi = NULL;
+    xclose(fo); fo = NULL;
     return r;
 }
 

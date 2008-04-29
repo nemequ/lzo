@@ -2,6 +2,9 @@
 
    This file is part of the LZO real-time data compression library.
 
+   Copyright (C) 2008 Markus Franz Xaver Johannes Oberhumer
+   Copyright (C) 2007 Markus Franz Xaver Johannes Oberhumer
+   Copyright (C) 2006 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2005 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2004 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2003 Markus Franz Xaver Johannes Oberhumer
@@ -15,8 +18,9 @@
    All Rights Reserved.
 
    The LZO library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public License,
-   version 2, as published by the Free Software Foundation.
+   modify it under the terms of the GNU General Public License as
+   published by the Free Software Foundation; either version 2 of
+   the License, or (at your option) any later version.
 
    The LZO library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -67,18 +71,18 @@
 #  endif
 #endif
 #if defined(WANT_LZO_UCLOCK)
-#  define ACC_WANT_ACCLIB_UCLOCK 1
+#  define ACC_WANT_ACCLIB_PCLOCK 1
 #  if 0 && (LZO_ARCH_AMD64 || LZO_ARCH_I386)
-#    define __ACCLIB_UCLOCK_USE_RDTSC 1
+#    define __ACCLIB_PCLOCK_USE_RDTSC 1
 #    define ACC_WANT_ACCLIB_RDTSC 1
 #  endif
 #endif
 #if defined(WANT_LZO_WILDARGV)
 #  define ACC_WANT_ACCLIB_WILDARGV 1
 #endif
-#if defined(__ACCLIB_UCLOCK_USE_PERFCTR)
+#if defined(__ACCLIB_PCLOCK_USE_PERFCTR)
 #  include "src/fullacc.h"
-#  define lzo_uclock_flush_cpu_cache(h,flags) acc_uclock_flush_cpu_cache(h,flags)
+#  define lzo_uclock_flush_cpu_cache(h,flags) acc_pclock_flush_cpu_cache(h,flags)
 #else
 #  include "src/miniacc.h"
 #endif
@@ -106,12 +110,12 @@
 #  define lzo_fwrite(f,b,s)     acc_hfwrite(f,b,s)
 #endif
 #if defined(WANT_LZO_UCLOCK)
-#  define lzo_uclock_handle_t   acc_uclock_handle_t
-#  define lzo_uclock_t          acc_uclock_t
-#  define lzo_uclock_open(a)    acc_uclock_open(a)
-#  define lzo_uclock_close(a)   acc_uclock_close(a)
-#  define lzo_uclock_read(a,b)  acc_uclock_read(a,b)
-#  define lzo_uclock_get_elapsed(a,b,c) acc_uclock_get_elapsed(a,b,c)
+#  define lzo_uclock_handle_t   acc_pclock_handle_t
+#  define lzo_uclock_t          acc_pclock_t
+#  define lzo_uclock_open(a)    acc_pclock_open_default(a)
+#  define lzo_uclock_close(a)   acc_pclock_close(a)
+#  define lzo_uclock_read(a,b)  acc_pclock_read(a,b)
+#  define lzo_uclock_get_elapsed(a,b,c) acc_pclock_get_elapsed(a,b,c)
 #endif
 #if defined(WANT_LZO_WILDARGV)
 #  define lzo_wildargv(a,b)     acc_wildargv(a,b)

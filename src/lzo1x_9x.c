@@ -2,6 +2,9 @@
 
    This file is part of the LZO real-time data compression library.
 
+   Copyright (C) 2008 Markus Franz Xaver Johannes Oberhumer
+   Copyright (C) 2007 Markus Franz Xaver Johannes Oberhumer
+   Copyright (C) 2006 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2005 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2004 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2003 Markus Franz Xaver Johannes Oberhumer
@@ -15,8 +18,9 @@
    All Rights Reserved.
 
    The LZO library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public License,
-   version 2, as published by the Free Software Foundation.
+   modify it under the terms of the GNU General Public License as
+   published by the Free Software Foundation; either version 2 of
+   the License, or (at your option) any later version.
 
    The LZO library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -671,7 +675,7 @@ lzo1x_999_compress_internal ( const lzo_bytep in , lzo_uint  in_len,
             l1 = len_of_coded_match(m_len,m_off,lit);
             assert(l1 > 0);
 #if 1
-            max_ahead = LZO_MIN(try_lazy, l1 - 1);
+            max_ahead = LZO_MIN((lzo_uint)try_lazy, (lzo_uint)l1 - 1);
 #else
             max_ahead = LZO_MIN3(try_lazy, l1, m_len - 1);
 #endif

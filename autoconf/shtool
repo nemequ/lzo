@@ -1,12 +1,12 @@
 #!/bin/sh
 ##
 ##  GNU shtool -- The GNU Portable Shell Tool
-##  Copyright (c) 1994-2005 Ralf S. Engelschall <rse@engelschall.com>
+##  Copyright (c) 1994-2006 Ralf S. Engelschall <rse@engelschall.com>
 ##
 ##  See http://www.gnu.org/software/shtool/ for more information.
 ##  See ftp://ftp.gnu.org/gnu/shtool/ for latest version.
 ##
-##  Version:  2.0.3 (02-Oct-2005)
+##  Version:  2.0.6 (19-Apr-2006)
 ##  Contents: all available modules
 ##
 
@@ -59,17 +59,42 @@
 ##    path       Deal with program paths
 ##
 
+#   maximum Bourne-Shell compatibility
+if [ ".$ZSH_VERSION" != . ] && (emulate sh) >/dev/null 2>&1; then
+    #   reconfigure zsh(1)
+    emulate sh
+    NULLCMD=:
+    alias -g '${1+"$@"}'='"$@"'
+elif [ ".$BASH_VERSION" != . ] && (set -o posix) >/dev/null 2>&1; then
+    #   reconfigure bash(1)
+    set -o posix
+fi
+
+#   maximum independence of NLS nuisances
+for var in \
+    LANG LANGUAGE LC_ADDRESS LC_ALL LC_COLLATE LC_CTYPE LC_IDENTIFICATION \
+    LC_MEASUREMENT LC_MESSAGES LC_MONETARY LC_NAME LC_NUMERIC LC_PAPER \
+    LC_TELEPHONE LC_TIME
+do
+    if (set +x; test -z "`(eval $var=C; export $var) 2>&1`"); then
+        eval $var=C; export $var
+    else
+        unset $var
+    fi
+done
+
+#   initial command line handling
 if [ $# -eq 0 ]; then
     echo "$0:Error: invalid command line" 1>&2
     echo "$0:Hint:  run \`$0 -h' for usage" 1>&2
     exit 1
 fi
 if [ ".$1" = ".-h" ] || [ ".$1" = ".--help" ]; then
-    echo "This is GNU shtool, version 2.0.3 (02-Oct-2005)"
-    echo "Copyright (c) 1994-2005 Ralf S. Engelschall <rse@engelschall.com>"
-    echo "Report bugs to <bug-shtool@gnu.org>"
+    echo "This is GNU shtool, version 2.0.6 (19-Apr-2006)"
+    echo 'Copyright (c) 1994-2006 Ralf S. Engelschall <rse@engelschall.com>'
+    echo 'Report bugs to <bug-shtool@gnu.org>'
     echo ''
-    echo "Usage: shtool [<options>] [<cmd-name> [<cmd-options>] [<cmd-args>]]"
+    echo 'Usage: shtool [<options>] [<cmd-name> [<cmd-options>] [<cmd-args>]]'
     echo ''
     echo 'Available global <options>:'
     echo '  -v, --version   display shtool version information'
@@ -132,7 +157,7 @@ if [ ".$1" = ".-h" ] || [ ".$1" = ".--help" ]; then
     exit 0
 fi
 if [ ".$1" = ".-v" ] || [ ".$1" = ".--version" ]; then
-    echo "GNU shtool 2.0.3 (02-Oct-2005)"
+    echo "GNU shtool 2.0.6 (19-Apr-2006)"
     exit 0
 fi
 if [ ".$1" = ".-r" ] || [ ".$1" = ".--recreate" ]; then
@@ -314,7 +339,7 @@ case $tool in
         opt_d=""
         opt_u=""
         opt_g=""
-        opt_e="CVS,\\.cvsignore,\\.[oa]\$"
+        opt_e="CVS,\\.cvsignore,\\.svn,\\.[oa]\$"
         ;;
     subst )
         str_tool="subst"
@@ -622,7 +647,7 @@ case $tool in
 echo )
     ##
     ##  echo -- Print string with optional construct expansion
-    ##  Copyright (c) 1998-2005 Ralf S. Engelschall <rse@engelschall.com>
+    ##  Copyright (c) 1998-2006 Ralf S. Engelschall <rse@engelschall.com>
     ##
 
     text="$*"
@@ -921,7 +946,7 @@ mdate )
     ##
     ##  mdate -- Pretty-print modification time of a file or dir
     ##  Copyright (c) 1995-1997 Free Software Foundation, Inc.
-    ##  Copyright (c) 1998-2005 Ralf S. Engelschall <rse@engelschall.com>
+    ##  Copyright (c) 1998-2006 Ralf S. Engelschall <rse@engelschall.com>
     ##
 
     fod="$1"
@@ -936,11 +961,6 @@ mdate )
         echo "$msgprefix:Error: file or directory not found: $fod" 1>&2
         shtool_exit 1
     fi
-
-    #   prevent "date" giving response in another language
-    LANG=C;    export LANG
-    LC_ALL=C;  export LC_ALL
-    LC_TIME=C; export LC_TIME
 
     #   GNU ls changes its time format in response to the TIME_STYLE
     #   variable. Since we cannot assume "unset" works, revert this
@@ -1054,7 +1074,7 @@ mdate )
 table )
     ##
     ##  table -- Pretty-print a field-separated list as a table
-    ##  Copyright (c) 1998-2005 Ralf S. Engelschall <rse@engelschall.com>
+    ##  Copyright (c) 1998-2006 Ralf S. Engelschall <rse@engelschall.com>
     ##
 
     if [ $opt_c -gt 4 ]; then
@@ -1119,7 +1139,7 @@ table )
 prop )
     ##
     ##  prop -- Display progress with a running propeller
-    ##  Copyright (c) 1998-2005 Ralf S. Engelschall <rse@engelschall.com>
+    ##  Copyright (c) 1998-2006 Ralf S. Engelschall <rse@engelschall.com>
     ##
 
     perl=''
@@ -1165,7 +1185,7 @@ prop )
 move )
     ##
     ##  move -- Move files with simultaneous substitution
-    ##  Copyright (c) 1999-2005 Ralf S. Engelschall <rse@engelschall.com>
+    ##  Copyright (c) 1999-2006 Ralf S. Engelschall <rse@engelschall.com>
     ##
 
     src="$1"
@@ -1257,7 +1277,7 @@ move )
 install )
     ##
     ##  install -- Install a program, script or datafile
-    ##  Copyright (c) 1997-2005 Ralf S. Engelschall <rse@engelschall.com>
+    ##  Copyright (c) 1997-2006 Ralf S. Engelschall <rse@engelschall.com>
     ##
 
     #   special case: "shtool install -d <dir> [...]" internally
@@ -1420,7 +1440,7 @@ install )
 mkdir )
     ##
     ##  mkdir -- Make one or more directories
-    ##  Copyright (c) 1996-2005 Ralf S. Engelschall <rse@engelschall.com>
+    ##  Copyright (c) 1996-2006 Ralf S. Engelschall <rse@engelschall.com>
     ##
 
     errstatus=0
@@ -1508,7 +1528,7 @@ mkdir )
 mkln )
     ##
     ##  mkln -- Make link with calculation of relative paths
-    ##  Copyright (c) 1998-2005 Ralf S. Engelschall <rse@engelschall.com>
+    ##  Copyright (c) 1998-2006 Ralf S. Engelschall <rse@engelschall.com>
     ##
 
     #   determine source(s) and destination
@@ -1659,7 +1679,7 @@ mkln )
 mkshadow )
     ##
     ##  mkshadow -- Make a shadow tree through symbolic links
-    ##  Copyright (c) 1998-2005 Ralf S. Engelschall <rse@engelschall.com>
+    ##  Copyright (c) 1998-2006 Ralf S. Engelschall <rse@engelschall.com>
     ##
 
     #   source and destination directory
@@ -1777,7 +1797,7 @@ mkshadow )
 fixperm )
     ##
     ##  fixperm -- Fix file permissions inside a source tree
-    ##  Copyright (c) 1996-2005 Ralf S. Engelschall <rse@engelschall.com>
+    ##  Copyright (c) 1996-2006 Ralf S. Engelschall <rse@engelschall.com>
     ##
 
     paths="$*"
@@ -1834,7 +1854,7 @@ fixperm )
 rotate )
     ##
     ##  rotate -- Logfile rotation
-    ##  Copyright (c) 2001-2005 Ralf S. Engelschall <rse@engelschall.com>
+    ##  Copyright (c) 2001-2006 Ralf S. Engelschall <rse@engelschall.com>
     ##
 
     #   make sure we have at least one file to rotate
@@ -2198,7 +2218,7 @@ rotate )
 tarball )
     ##
     ##  tarball -- Roll distribution tarballs
-    ##  Copyright (c) 1999-2005 Ralf S. Engelschall <rse@engelschall.com>
+    ##  Copyright (c) 1999-2006 Ralf S. Engelschall <rse@engelschall.com>
     ##
 
     srcs="$*"
@@ -2362,7 +2382,7 @@ tarball )
 subst )
     ##
     ##  subst -- Apply sed(1) substitution operations
-    ##  Copyright (c) 2001-2005 Ralf S. Engelschall <rse@engelschall.com>
+    ##  Copyright (c) 2001-2006 Ralf S. Engelschall <rse@engelschall.com>
     ##
 
     #   remember optional list of file(s)
@@ -2523,7 +2543,7 @@ subst )
 platform )
     ##
     ##  platform -- Platform Identification Utility
-    ##  Copyright (c) 2003-2005 Ralf S. Engelschall <rse@engelschall.com>
+    ##  Copyright (c) 2003-2006 Ralf S. Engelschall <rse@engelschall.com>
     ##
 
     #   option post-processing
@@ -2751,12 +2771,17 @@ platform )
             #   determine architecture
             AT="${UNAME_MACHINE}"
             case "${AT}" in
-                i86pc ) AT="iX86" ;;
+                i86pc )
+                    AT="iX86"
+                    case "`(/bin/isainfo -k) 2>&1`" in
+                        amd64 ) AT="AMD64" ;;
+                    esac
+                    ;;
             esac
             AP="${AT}"
             case "${AP}" in
                 sun4[cdm] ) AP="SPARC32" ;;
-                sun4u     ) AP="SPARC64" ;;
+                sun4[uv]  ) AP="SPARC64" ;;
                 sun4*     ) AP="SPARC"   ;;
             esac
             AC="${AP}"
@@ -3071,7 +3096,7 @@ platform )
 arx )
     ##
     ##  arx -- Extended archive command
-    ##  Copyright (c) 1999-2005 Ralf S. Engelschall <rse@engelschall.com>
+    ##  Copyright (c) 1999-2006 Ralf S. Engelschall <rse@engelschall.com>
     ##
 
     ar_prg="$opt_C"
@@ -3150,7 +3175,7 @@ arx )
 slo )
     ##
     ##  slo -- Separate linker options by library class
-    ##  Copyright (c) 1998-2005 Ralf S. Engelschall <rse@engelschall.com>
+    ##  Copyright (c) 1998-2006 Ralf S. Engelschall <rse@engelschall.com>
     ##
 
     DIFS="$IFS"
@@ -3309,7 +3334,7 @@ slo )
 scpp )
     ##
     ##  scpp -- Sharing C Pre-Processor
-    ##  Copyright (c) 1999-2005 Ralf S. Engelschall <rse@engelschall.com>
+    ##  Copyright (c) 1999-2006 Ralf S. Engelschall <rse@engelschall.com>
     ##
 
     srcs="$*"
@@ -3529,7 +3554,7 @@ scpp )
 version )
     ##
     ##  version -- Maintain a version information file
-    ##  Copyright (c) 1994-2005 Ralf S. Engelschall <rse@engelschall.com>
+    ##  Copyright (c) 1994-2006 Ralf S. Engelschall <rse@engelschall.com>
     ##
 
     file="$1"
@@ -3690,13 +3715,10 @@ version )
 
         #   determine string out of filename
         #   (do NOT try to optimize this in any way because of portability)
-        filestr=`echo $file |\
-                 tr 'abcdefghijklmnopqrstuvwxyz./%+' \
-                    'ABCDEFGHIJKLMNOPQRSTUVWXYZ____' | sed -e 's/-/_/g'`
+        filestr=`util_upper "$file" | tr './%+' '____' | sed -e 's/-/_/g'`
 
         #   generate uppercase prefix
-        prefixupper=`echo $prefix |\
-                     tr 'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'`
+        prefixupper=`util_upper "$prefix"`
 
         #   create the version file according the the selected language
         echo "new version: ${vLong}"
@@ -3824,7 +3846,7 @@ version )
 path )
     ##
     ##  path -- Deal with program paths
-    ##  Copyright (c) 1998-2005 Ralf S. Engelschall <rse@engelschall.com>
+    ##  Copyright (c) 1998-2006 Ralf S. Engelschall <rse@engelschall.com>
     ##
 
     namelist="$*"
