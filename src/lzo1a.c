@@ -2,6 +2,8 @@
 
    This file is part of the LZO real-time data compression library.
 
+   Copyright (C) 2010 Markus Franz Xaver Johannes Oberhumer
+   Copyright (C) 2009 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2008 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2007 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2006 Markus Franz Xaver Johannes Oberhumer
@@ -63,7 +65,7 @@
 
 /* Collect statistics */
 #if 0 && !defined(LZO_COLLECT_STATS)
-#  define LZO_COLLECT_STATS
+#  define LZO_COLLECT_STATS 1
 #endif
 
 
@@ -291,7 +293,7 @@ do_compress    ( const lzo_bytep in , lzo_uint  in_len,
     DVAL_NEXT(dv,ip);
 
     do {
-        lzo_uint m_off;
+        LZO_DEFINE_UNINITIALIZED_VAR(lzo_uint, m_off, 0);
         lzo_uint dindex;
 
         DINDEX1(dindex,ip);
@@ -628,7 +630,7 @@ lzo1a_compress ( const lzo_bytep in , lzo_uint  in_len,
 
 
     /* don't try to compress a block that's too short */
-    if (in_len <= 0)
+    if (in_len == 0)
         *out_len = 0;
     else if (in_len <= MIN_MATCH_LONG + DVAL_LEN + 1)
     {

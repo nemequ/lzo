@@ -2,6 +2,8 @@
 
    This file is part of the LZO real-time data compression library.
 
+   Copyright (C) 2010 Markus Franz Xaver Johannes Oberhumer
+   Copyright (C) 2009 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2008 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2007 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2006 Markus Franz Xaver Johannes Oberhumer
@@ -39,17 +41,6 @@
 
 
 #include "lzo1_d.ch"
-
-
-#undef __COPY4
-#define __COPY4(dst,src)    * (lzo_uint32p)(dst) = * (const lzo_uint32p)(src)
-
-#undef COPY4
-#if defined(LZO_UNALIGNED_OK_4)
-#  define COPY4(dst,src)    __COPY4(dst,src)
-#elif defined(LZO_ALIGNED_OK_4)
-#  define COPY4(dst,src)    __COPY4((lzo_uintptr_t)(dst),(lzo_uintptr_t)(src))
-#endif
 
 
 /***********************************************************************
@@ -284,7 +275,7 @@ match:
                 }
 #elif defined(LZO_UNALIGNED_OK_2) && defined(LZO_ABI_LITTLE_ENDIAN)
                 m_pos = op - 1;
-                m_pos -= (* (const lzo_ushortp) ip) >> 2;
+                m_pos -= (* (const lzo_ushortp) (const lzo_voidp) ip) >> 2;
 #else
                 m_pos = op - 1;
                 m_pos -= (ip[0] >> 2) + (ip[1] << 6);
@@ -329,7 +320,7 @@ match:
 #if defined(LZO1Z)
                 m_pos -= (ip[0] << 6) + (ip[1] >> 2);
 #elif defined(LZO_UNALIGNED_OK_2) && defined(LZO_ABI_LITTLE_ENDIAN)
-                m_pos -= (* (const lzo_ushortp) ip) >> 2;
+                m_pos -= (* (const lzo_ushortp) (const lzo_voidp) ip) >> 2;
 #else
                 m_pos -= (ip[0] >> 2) + (ip[1] << 6);
 #endif

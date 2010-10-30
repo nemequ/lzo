@@ -2,6 +2,8 @@
 
    This file is part of the LZO real-time data compression library.
 
+   Copyright (C) 2010 Markus Franz Xaver Johannes Oberhumer
+   Copyright (C) 2009 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2008 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2007 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2006 Markus Franz Xaver Johannes Oberhumer
@@ -45,25 +47,25 @@
 
 
 #ifndef __LZO_CONF_H
-#define __LZO_CONF_H
+#define __LZO_CONF_H 1
 
 #if !defined(__LZO_IN_MINILZO)
-#if defined(LZO_CFG_FREESTANDING)
+#if (LZO_CFG_FREESTANDING)
 #  define LZO_LIBC_FREESTANDING 1
 #  define LZO_OS_FREESTANDING 1
 #  define ACC_LIBC_FREESTANDING 1
 #  define ACC_OS_FREESTANDING 1
 #endif
-#if defined(LZO_CFG_NO_UNALIGNED)
+#if (LZO_CFG_NO_UNALIGNED)
 #  define ACC_CFG_NO_UNALIGNED 1
 #endif
-#if defined(LZO_ARCH_GENERIC)
+#if (LZO_ARCH_GENERIC)
 #  define ACC_ARCH_GENERIC 1
 #endif
-#if defined(LZO_ABI_NEUTRAL_ENDIAN)
+#if (LZO_ABI_NEUTRAL_ENDIAN)
 #  define ACC_ABI_NEUTRAL_ENDIAN 1
 #endif
-#if defined(LZO_HAVE_CONFIG_H)
+#if (LZO_HAVE_CONFIG_H)
 #  define ACC_CONFIG_NO_HEADER 1
 #endif
 #if defined(LZO_CFG_EXTRA_CONFIG_HEADER)
@@ -92,15 +94,18 @@
 #  pragma warning(disable: 4127 4701)
 #endif
 #if (LZO_CC_MSC && (_MSC_VER >= 1300))
-   /* avoid `-Wall' warnings in system header files */
+   /* avoid '-Wall' warnings in system header files */
 #  pragma warning(disable: 4820)
    /* avoid warnings about inlining */
 #  pragma warning(disable: 4514 4710 4711)
 #endif
 
 #if (LZO_CC_SUNPROC)
+#if !defined(__cplusplus)
 #  pragma error_messages(off,E_END_OF_LOOP_CODE_NOT_REACHED)
 #  pragma error_messages(off,E_LOOP_NOT_ENTERED_AT_TOP)
+#  pragma error_messages(off,E_STATEMENT_NOT_REACHED)
+#endif
 #endif
 
 
@@ -108,7 +113,7 @@
 //
 ************************************************************************/
 
-#if defined(__LZO_MMODEL_HUGE) && (!LZO_HAVE_MM_HUGE_PTR)
+#if (__LZO_MMODEL_HUGE) && !(LZO_HAVE_MM_HUGE_PTR)
 #  error "this should not happen - check defines for __huge"
 #endif
 
@@ -125,41 +130,45 @@
 #include "miniacc.h"
 
 
-#if defined(LZO_CFG_FREESTANDING)
+#if (LZO_CFG_FREESTANDING)
 #  undef HAVE_MEMCMP
 #  undef HAVE_MEMCPY
 #  undef HAVE_MEMMOVE
 #  undef HAVE_MEMSET
 #endif
 
-#if !defined(HAVE_MEMCMP)
+#if !(HAVE_MEMCMP)
 #  undef memcmp
 #  define memcmp(a,b,c)         lzo_memcmp(a,b,c)
-#elif !defined(__LZO_MMODEL_HUGE)
+#elif !(__LZO_MMODEL_HUGE)
+#  undef lzo_memcmp
 #  define lzo_memcmp(a,b,c)     memcmp(a,b,c)
 #endif
-#if !defined(HAVE_MEMCPY)
+#if !(HAVE_MEMCPY)
 #  undef memcpy
 #  define memcpy(a,b,c)         lzo_memcpy(a,b,c)
-#elif !defined(__LZO_MMODEL_HUGE)
+#elif !(__LZO_MMODEL_HUGE)
+#  undef lzo_memcpy
 #  define lzo_memcpy(a,b,c)     memcpy(a,b,c)
 #endif
-#if !defined(HAVE_MEMMOVE)
+#if !(HAVE_MEMMOVE)
 #  undef memmove
 #  define memmove(a,b,c)        lzo_memmove(a,b,c)
-#elif !defined(__LZO_MMODEL_HUGE)
+#elif !(__LZO_MMODEL_HUGE)
+#  undef lzo_memmove
 #  define lzo_memmove(a,b,c)    memmove(a,b,c)
 #endif
-#if !defined(HAVE_MEMSET)
+#if !(HAVE_MEMSET)
 #  undef memset
 #  define memset(a,b,c)         lzo_memset(a,b,c)
-#elif !defined(__LZO_MMODEL_HUGE)
+#elif !(__LZO_MMODEL_HUGE)
+#  undef lzo_memset
 #  define lzo_memset(a,b,c)     memset(a,b,c)
 #endif
 
 
 #undef NDEBUG
-#if defined(LZO_CFG_FREESTANDING)
+#if (LZO_CFG_FREESTANDING)
 #  undef LZO_DEBUG
 #  define NDEBUG 1
 #  undef assert
@@ -179,13 +188,24 @@
 #endif
 
 #if !defined(__lzo_inline)
-#  define __lzo_inline
+#  define __lzo_inline              /*empty*/
 #endif
 #if !defined(__lzo_forceinline)
-#  define __lzo_forceinline
+#  define __lzo_forceinline         /*empty*/
 #endif
 #if !defined(__lzo_noinline)
-#  define __lzo_noinline
+#  define __lzo_noinline            /*empty*/
+#endif
+
+#if (LZO_CFG_PGO)
+#  undef __acc_likely
+#  undef __acc_unlikely
+#  undef __lzo_likely
+#  undef __lzo_unlikely
+#  define __acc_likely(e)       (e)
+#  define __acc_unlikely(e)     (e)
+#  define __lzo_likely(e)       (e)
+#  define __lzo_unlikely(e)     (e)
 #endif
 
 
@@ -238,13 +258,13 @@
  * even if it is allowed by your system.
  */
 
-#if 1 && !defined(LZO_CFG_NO_UNALIGNED)
-#if 1 && (LZO_ARCH_AMD64 || LZO_ARCH_I386)
+#if 1 && !(LZO_CFG_NO_UNALIGNED)
+#if 1 && (LZO_ARCH_AMD64 || LZO_ARCH_I386 || LZO_ARCH_POWERPC)
 #  if (LZO_SIZEOF_SHORT == 2)
-#    define LZO_UNALIGNED_OK_2
+#    define LZO_UNALIGNED_OK_2 1
 #  endif
 #  if (LZO_SIZEOF_INT == 4)
-#    define LZO_UNALIGNED_OK_4
+#    define LZO_UNALIGNED_OK_4 1
 #  endif
 #endif
 #endif
@@ -256,6 +276,15 @@
   LZO_COMPILE_TIME_ASSERT_HEADER(sizeof(lzo_uint32) == 4)
 #elif defined(LZO_ALIGNED_OK_4)
   LZO_COMPILE_TIME_ASSERT_HEADER(sizeof(lzo_uint32) == 4)
+#endif
+
+#undef COPY4
+#if defined(LZO_UNALIGNED_OK_4) || defined(LZO_ALIGNED_OK_4)
+#  if 1 && defined(ACC_UA_COPY32)
+#    define COPY4(d,s)  ACC_UA_COPY32(d,s)
+#  else
+#    define COPY4(d,s)  (* (__lzo_ua_volatile lzo_uint32p)(__lzo_ua_volatile lzo_voidp)(d) = * (__lzo_ua_volatile const lzo_uint32p)(__lzo_ua_volatile const lzo_voidp)(s))
+#  endif
 #endif
 
 
@@ -279,8 +308,6 @@
 // some globals
 ************************************************************************/
 
-__LZO_EXTERN_C int __lzo_init_done;
-__LZO_EXTERN_C const char __lzo_copyright[];
 LZO_EXTERN(const lzo_bytep) lzo_copyright(void);
 
 
@@ -298,15 +325,15 @@ LZO_EXTERN(const lzo_bytep) lzo_copyright(void);
  * then the initialization of the dictionary becomes a relevant
  * magnitude for compression speed.
  */
-#define LZO_DETERMINISTIC
+#define LZO_DETERMINISTIC 1
 
 
-#define LZO_DICT_USE_PTR
+#define LZO_DICT_USE_PTR 1
 #if 0 && (LZO_ARCH_I086)
 #  undef LZO_DICT_USE_PTR
 #endif
 
-#if defined(LZO_DICT_USE_PTR)
+#if (LZO_DICT_USE_PTR)
 #  define lzo_dict_t    const lzo_bytep
 #  define lzo_dict_p    lzo_dict_t __LZO_MMODEL *
 #else

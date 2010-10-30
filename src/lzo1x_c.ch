@@ -2,6 +2,8 @@
 
    This file is part of the LZO real-time data compression library.
 
+   Copyright (C) 2010 Markus Franz Xaver Johannes Oberhumer
+   Copyright (C) 2009 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2008 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2007 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2006 Markus Franz Xaver Johannes Oberhumer
@@ -39,6 +41,12 @@
 
 
 
+#if 1 && defined(DO_COMPRESS) && !defined(do_compress)
+   /* choose a unique name to better help PGO optimizations */
+#  define do_compress       LZO_CPP_ECONCAT2(DO_COMPRESS,_core)
+#endif
+
+
 /***********************************************************************
 // compress a block of data.
 ************************************************************************/
@@ -63,7 +71,7 @@ do_compress ( const lzo_bytep in , lzo_uint  in_len,
     for (;;)
     {
         register const lzo_bytep m_pos;
-        lzo_uint m_off;
+        LZO_DEFINE_UNINITIALIZED_VAR(lzo_uint, m_off, 0);
         lzo_uint m_len;
         lzo_uint dindex;
 
@@ -86,7 +94,7 @@ do_compress ( const lzo_bytep in , lzo_uint  in_len,
 
 try_match:
 #if 1 && defined(LZO_UNALIGNED_OK_2)
-        if (* (const lzo_ushortp) m_pos != * (const lzo_ushortp) ip)
+        if (* (const lzo_ushortp) (const lzo_voidp) m_pos != * (const lzo_ushortp) (const lzo_voidp) ip)
 #else
         if (m_pos[0] != ip[0] || m_pos[1] != ip[1])
 #endif

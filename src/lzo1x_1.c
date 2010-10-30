@@ -2,6 +2,8 @@
 
    This file is part of the LZO real-time data compression library.
 
+   Copyright (C) 2010 Markus Franz Xaver Johannes Oberhumer
+   Copyright (C) 2009 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2008 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2007 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2006 Markus Franz Xaver Johannes Oberhumer
@@ -38,13 +40,14 @@
  */
 
 
-#define LZO_NEED_DICT_H
+#define LZO_NEED_DICT_H 1
 #define D_BITS          14
 #define D_INDEX1(d,p)       d = DM(DMUL(0x21,DX3(p,5,5,6)) >> 5)
 #define D_INDEX2(d,p)       d = (d & (D_MASK & 0x7ff)) ^ (D_HIGH | 0x1f)
 
 #include "config1x.h"
 
+#define do_compress     _lzo1x_1_do_compress
 #define DO_COMPRESS     lzo1x_1_compress
 
 #include "lzo1x_c.ch"

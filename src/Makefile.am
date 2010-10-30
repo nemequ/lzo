@@ -1,6 +1,6 @@
 ## Process this file with automake to create Makefile.in
 #
-# Copyright (C) 1996-2008 Markus F.X.J. Oberhumer
+# Copyright (C) 1996-2010 Markus F.X.J. Oberhumer
 #
 
 VPATH = @srcdir@@LZO_ASM_VPATH@
@@ -59,10 +59,10 @@ LZO_ASM_OBJECTS = \
 	lzo1y_f1.lo lzo1y_f2.lo lzo1y_s1.lo lzo1y_s2.lo
 
 .S.o:
-	$(CC) -c $<
+	$(AM_V_CC)$(CC) -c $<
 
 .S.lo:
-	$(LIBTOOL) --mode=compile $(CC) -c $<
+	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) -c $<
 
 endif
 

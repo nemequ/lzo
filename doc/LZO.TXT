@@ -6,8 +6,8 @@
  Author  : Markus Franz Xaver Johannes Oberhumer
            <markus@oberhumer.com>
            http://www.oberhumer.com/opensource/lzo/
- Version : 2.03
- Date    : 30 Apr 2008
+ Version : 2.04
+ Date    : 31 Oct 2010
 
 
  Abstract
@@ -155,11 +155,11 @@
  redundant data and deals acceptably with non-compressible data.
 
  When dealing with uncompressible data, LZO expands the input
- block by a maximum of 16 bytes per 1024 bytes input.
+ block by a maximum of 64 bytes per 1024 bytes input.
 
  I have verified LZO using such tools as valgrind and other memory checkers.
  And in addition to compressing gigabytes of files when tuning some parameters
- I have also consulted various `lint' programs to spot potential portability
+ I have also consulted various 'lint' programs to spot potential portability
  problems. LZO is free of any known bugs.
 
 
@@ -262,7 +262,7 @@
 
  Some comments about the source code
  -----------------------------------
- Be warned: the main source code in the `src' directory is a
+ Be warned: the main source code in the 'src' directory is a
  real pain to understand as I've experimented with hundreds of slightly
  different versions. It contains many #if and some gotos, and
  is *completely optimized for speed* and not for readability.
@@ -278,7 +278,7 @@
  Copyright
  ---------
  LZO is Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004,
- 2005, 2006, 2007, 2008 Markus Franz Xaver Johannes Oberhumer
+ 2005, 2006, 2007, 2008, 2009, 2010 Markus Franz Xaver Johannes Oberhumer
 
  LZO is distributed under the terms of the GNU General Public License (GPL).
  See the file COPYING.

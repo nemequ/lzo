@@ -3,7 +3,7 @@
 #
 #  This file is part of the LZO data compression library.
 #
-#  Copyright (C) 1996-2008 Markus Franz Xaver Johannes Oberhumer
+#  Copyright (C) 1996-2010 Markus Franz Xaver Johannes Oberhumer
 #  All Rights Reserved.
 #
 #  The LZO library is free software; you can redistribute it and/or
@@ -31,13 +31,13 @@
 # // Init
 # ************************************************************************/
 
-AC_COPYRIGHT([Copyright (C) 1996-2008 Markus Franz Xaver Johannes Oberhumer.
+AC_COPYRIGHT([Copyright (C) 1996-2010 Markus Franz Xaver Johannes Oberhumer.
 All Rights Reserved.
 This configure script may be copied, distributed and modified under the
 terms of the GNU General Public License; see COPYING for more details.])
 
-AC_PREREQ(2.59)
-AC_INIT([lzo],[2.03],[markus@oberhumer.com])
+AC_PREREQ(2.67)
+AC_INIT([LZO],[2.04],[markus@oberhumer.com],[lzo],[http://www.oberhumer.com/opensource/lzo/])
 AC_MSG_NOTICE([Configuring LZO $PACKAGE_VERSION])
 AC_CONFIG_SRCDIR(src/lzo_init.c)
 AC_CONFIG_AUX_DIR(autoconf)
@@ -48,7 +48,10 @@ AC_CANONICAL_TARGET
 AM_MAINTAINER_MODE
 
 if test -z "$ac_abs_top_srcdir"; then
-    _AC_SRCPATHS(.)
+    _AC_SRCDIRS([.])
+fi
+if test -z "$ac_abs_top_srcdir"; then
+    as_fn_error 1 "internal error: ac_abs_top_srcdir is not set"
 fi
 if test -r .Conf.settings1; then
     . ./.Conf.settings1
@@ -61,56 +64,13 @@ AC_C_CONST
 mfx_LZO_CHECK_ENDIAN
 AC_SYS_LARGEFILE
 
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE([1.11.1 gnu])
+AM_SILENT_RULES([no])
 AC_CONFIG_HEADERS([config.h:config.hin])
 
 AC_ENABLE_STATIC
 AC_DISABLE_SHARED
-AC_PROG_LIBTOOL
-
-
-# /***********************************************************************
-# // Checks for assembler
-# ************************************************************************/
-
-AC_ARG_ENABLE(asm, AS_HELP_STRING(--disable-asm,disable assembly versions))
-
-asm_arch=
-asm_dir=
-asm_msg_amd64=no
-asm_msg_i386=no
-
-case $host_cpu in
-    amd64 | x86_64) asm_arch="amd64"; asm_dir="asm/amd64/src_gas/elf64" ;;
-    i?86) asm_arch="i386"; asm_dir="asm/i386/src_gas" ;;
-    *) enable_asm=no ;;
-esac
-LZO_ASM_VPATH=
-
-AC_MSG_CHECKING([whether to build assembly versions])
-if test "X$enable_asm" != Xno; then
-mfx_compile_S='${CC-cc} -c conftest.S 1>&AS_MESSAGE_LOG_FD'
-cat > conftest.S <<EOF
-#include "$ac_abs_top_srcdir/$asm_dir/lzo1x_f1.S"
-EOF
-enable_asm=no
-if AC_TRY_EVAL(mfx_compile_S); then
-    if AC_TRY_COMMAND([test -s conftest.$ac_objext]); then
-        enable_asm=yes
-        eval asm_msg_$asm_arch="'yes [[$asm_dir]]'"
-        LZO_ASM_VPATH=":$ac_abs_top_srcdir/$asm_dir"
-    fi
-fi
-if test "X$enable_asm" = Xno; then
-    echo "configure: failed program was:" >&AS_MESSAGE_LOG_FD
-    cat conftest.S >&AS_MESSAGE_LOG_FD
-fi
-rm -rf conftest*
-fi
-AC_MSG_RESULT([$enable_asm])
-
-AM_CONDITIONAL(LZO_USE_ASM, [test "X$enable_asm" != Xno])
-AC_SUBST(LZO_ASM_VPATH)
+LT_INIT
 
 
 # /***********************************************************************
@@ -150,6 +110,50 @@ mfx_CHECK_LIB_WINMM
 
 
 # /***********************************************************************
+# // Checks for assembler
+# ************************************************************************/
+
+AC_ARG_ENABLE(asm, AS_HELP_STRING(--disable-asm,disable assembly versions))
+
+asm_arch=
+asm_dir=
+asm_msg_amd64=no
+asm_msg_i386=no
+
+case "$host_cpu-$ac_cv_sizeof_void_p" in
+    amd64-8 | x86_64-8) asm_arch="amd64"; asm_dir="asm/amd64/src_gas/elf64" ;;
+    i?86-4) asm_arch="i386"; asm_dir="asm/i386/src_gas" ;;
+    *) enable_asm=no ;;
+esac
+LZO_ASM_VPATH=
+
+AC_MSG_CHECKING([whether to build assembly versions])
+if test "X$enable_asm" != Xno; then
+mfx_compile_S='${CC-cc} -c conftest.S 1>&AS_MESSAGE_LOG_FD'
+cat > conftest.S <<EOF
+#include "$ac_abs_top_srcdir/$asm_dir/lzo1x_f1.S"
+EOF
+enable_asm=no
+if AC_TRY_EVAL(mfx_compile_S); then
+    if AC_TRY_COMMAND([test -s conftest.$ac_objext]); then
+        enable_asm=yes
+        eval asm_msg_$asm_arch="'yes [[$asm_dir]]'"
+        LZO_ASM_VPATH=":$ac_abs_top_srcdir/$asm_dir"
+    fi
+fi
+if test "X$enable_asm" = Xno; then
+    echo "configure: failed program was:" >&AS_MESSAGE_LOG_FD
+    cat conftest.S >&AS_MESSAGE_LOG_FD
+fi
+rm -rf conftest*
+fi
+AC_MSG_RESULT([$enable_asm])
+
+AM_CONDITIONAL(LZO_USE_ASM, [test "X$enable_asm" != Xno])
+AC_SUBST(LZO_ASM_VPATH)
+
+
+# /***********************************************************************
 # // Write output files
 # ************************************************************************/
 
@@ -160,9 +164,9 @@ if test -r .Conf.settings2; then
 fi
 
 test "X$CPPFLAGS" != "X" && CPPFLAGS="$CPPFLAGS "
-CPPFLAGS="${CPPFLAGS}-DLZO_HAVE_CONFIG_H"
+CPPFLAGS="${CPPFLAGS}-DLZO_HAVE_CONFIG_H=1"
 if test "X$enable_asm" != Xno; then
-    CPPFLAGS="$CPPFLAGS -DLZO_USE_ASM"
+    CPPFLAGS="$CPPFLAGS -DLZO_USE_ASM=1"
 fi
 AC_SUBST(LZO_CPPFLAGS)
 AC_SUBST(LZO_EXTRA_CPPFLAGS)
@@ -196,7 +200,7 @@ cat <<EOF
 
    LZO ${PACKAGE_VERSION} configured.
 
-   Copyright (C) 1996-2008 Markus Franz Xaver Johannes Oberhumer
+   Copyright (C) 1996-2010 Markus Franz Xaver Johannes Oberhumer
    All Rights Reserved.
 
    The LZO library is free software; you can redistribute it and/or

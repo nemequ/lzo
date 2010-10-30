@@ -2,6 +2,8 @@
 
    This file is part of the LZO real-time data compression library.
 
+   Copyright (C) 2010 Markus Franz Xaver Johannes Oberhumer
+   Copyright (C) 2009 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2008 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2007 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2006 Markus Franz Xaver Johannes Oberhumer
@@ -79,7 +81,7 @@
             const lzo_bytep ip_sav;
             unsigned j = DD_SIZE;
             lzo_uint x_len;
-            lzo_uint x_off;
+            LZO_DEFINE_UNINITIALIZED_VAR(lzo_uint, x_off, 0);
 
             DVAL_ASSERT(dv,ip);
 

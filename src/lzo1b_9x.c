@@ -2,6 +2,8 @@
 
    This file is part of the LZO real-time data compression library.
 
+   Copyright (C) 2010 Markus Franz Xaver Johannes Oberhumer
+   Copyright (C) 2009 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2008 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2007 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2006 Markus Franz Xaver Johannes Oberhumer
@@ -45,12 +47,12 @@
 //
 ************************************************************************/
 
-#define N          0xffffL          /* size of ring buffer */
-#define THRESHOLD       2           /* lower limit for match length */
-#define F            2048           /* upper limit for match length */
+#define SWD_N          0xffffL          /* size of ring buffer */
+#define SWD_THRESHOLD       2           /* lower limit for match length */
+#define SWD_F            2048           /* upper limit for match length */
 
 
-#define LZO1B
+#define LZO1B 1
 #define LZO_COMPRESS_T  lzo1b_999_t
 #define lzo_swd_t       lzo1b_999_swd_t
 #include "lzo_mchw.ch"

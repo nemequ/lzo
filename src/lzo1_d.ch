@@ -2,6 +2,8 @@
 
    This file is part of the LZO real-time data compression library.
 
+   Copyright (C) 2010 Markus Franz Xaver Johannes Oberhumer
+   Copyright (C) 2009 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2008 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2007 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2006 Markus Franz Xaver Johannes Oberhumer
@@ -47,7 +49,7 @@
 #    define LZO_TEST_OVERRUN_OUTPUT      2
 #  endif
 #  if !defined(LZO_TEST_OVERRUN_LOOKBEHIND)
-#    define LZO_TEST_OVERRUN_LOOKBEHIND
+#    define LZO_TEST_OVERRUN_LOOKBEHIND  1
 #  endif
 #endif
 
@@ -118,33 +120,33 @@
 
 
 #if defined(TEST_IP)
-#  define HAVE_TEST_IP
+#  define HAVE_TEST_IP 1
 #else
 #  define TEST_IP               1
 #endif
 #if defined(TEST_OP)
-#  define HAVE_TEST_OP
+#  define HAVE_TEST_OP 1
 #else
 #  define TEST_OP               1
 #endif
 
 #if defined(NEED_IP)
-#  define HAVE_NEED_IP
+#  define HAVE_NEED_IP 1
 #else
 #  define NEED_IP(x)            ((void) 0)
 #endif
 #if defined(NEED_OP)
-#  define HAVE_NEED_OP
+#  define HAVE_NEED_OP 1
 #else
 #  define NEED_OP(x)            ((void) 0)
 #endif
 
 
 #if defined(HAVE_TEST_IP) || defined(HAVE_NEED_IP)
-#  define HAVE_ANY_IP
+#  define HAVE_ANY_IP 1
 #endif
 #if defined(HAVE_TEST_OP) || defined(HAVE_NEED_OP)
-#  define HAVE_ANY_OP
+#  define HAVE_ANY_OP 1
 #endif
 
 
