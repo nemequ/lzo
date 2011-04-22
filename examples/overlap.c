@@ -2,6 +2,7 @@
 
    This file is part of the LZO real-time data compression library.
 
+   Copyright (C) 2011 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2010 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2009 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2008 Markus Franz Xaver Johannes Oberhumer
@@ -276,7 +277,7 @@ int __lzo_cdecl_main main(int argc, char *argv[])
 
     printf("\nLZO real-time data compression library (v%s, %s).\n",
            lzo_version_string(), lzo_version_date());
-    printf("Copyright (C) 1996-2010 Markus Franz Xaver Johannes Oberhumer\nAll Rights Reserved.\n\n");
+    printf("Copyright (C) 1996-2011 Markus Franz Xaver Johannes Oberhumer\nAll Rights Reserved.\n\n");
 
     progname = argv[0];
     if (i < argc && argv[i][0] == '-')

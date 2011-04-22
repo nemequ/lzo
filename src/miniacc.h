@@ -2,6 +2,7 @@
 
    This file is part of the LZO real-time data compression library.
 
+   Copyright (C) 2011 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2010 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2009 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2008 Markus Franz Xaver Johannes Oberhumer
@@ -42,7 +43,7 @@
 
 #ifndef __ACC_H_INCLUDED
 #define __ACC_H_INCLUDED 1
-#define ACC_VERSION     20101019L
+#define ACC_VERSION     20110125L
 #if defined(__CYGWIN32__) && !defined(__CYGWIN__)
 #  define __CYGWIN__ __CYGWIN32__
 #endif
@@ -563,7 +564,7 @@
 #  if defined(__clang_major__) && defined(__clang_minor__) && defined(__clang_patchlevel__)
 #    define ACC_CC_CLANG_CLANG  (__clang_major__ * 0x10000L + __clang_minor__ * 0x100 + __clang_patchlevel__)
 #  else
-#    define ACC_CC_CLANG_CLANG  0x020700L
+#    define ACC_CC_CLANG_CLANG  0x010000L
 #  endif
 #  define ACC_CC_CLANG          ACC_CC_CLANG_GNUC
 #  define ACC_INFO_CC           "clang"
@@ -6778,7 +6779,7 @@ ACCLIB_PUBLIC_NOINLINE(void, acc_debug_break) (void)
 #elif (ACC_OS_WIN32) && (ACC_HAVE_WINDOWS_H)
     DebugBreak();
 #else
-    * (volatile int *) 0x1 = -1;
+    * (volatile unsigned long *) (volatile void *) (size_t) 0x1 = ~0ul;
 #endif
 }
 ACCLIB_PUBLIC_NOINLINE(void, acc_debug_nop) (void)

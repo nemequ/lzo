@@ -2,6 +2,7 @@
 
    This file is part of the LZO real-time data compression library.
 
+   Copyright (C) 2011 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2010 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2009 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2008 Markus Franz Xaver Johannes Oberhumer
@@ -94,7 +95,7 @@ lzo1x_1_compress        ( const lzo_bytep src, lzo_uint  src_len,
 // special compressor versions
 ************************************************************************/
 
-/* this version needs only 8 kB work memory */
+/* this version needs only 8 KiB work memory */
 #define LZO1X_1_11_MEM_COMPRESS ((lzo_uint32) (2048L * lzo_sizeof_dict_t))
 
 LZO_EXTERN(int)
@@ -103,7 +104,7 @@ lzo1x_1_11_compress     ( const lzo_bytep src, lzo_uint  src_len,
                                 lzo_voidp wrkmem );
 
 
-/* this version needs 16 kB work memory */
+/* this version needs 16 KiB work memory */
 #define LZO1X_1_12_MEM_COMPRESS ((lzo_uint32) (4096L * lzo_sizeof_dict_t))
 
 LZO_EXTERN(int)

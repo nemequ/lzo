@@ -2,6 +2,7 @@
 
    This file is part of the LZO real-time data compression library.
 
+   Copyright (C) 2011 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2010 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2009 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2008 Markus Franz Xaver Johannes Oberhumer
@@ -248,7 +249,7 @@ lzo1c_999_compress_callback ( const lzo_bytep in , lzo_uint  in_len,
             assert(m_len > 0);
 
             r = find_match(c,swd,1,0);
-            assert(r == 0);
+            assert(r == 0); LZO_UNUSED(r);
             assert(c->look > 0);
 
             if (m_len <= M2_MAX_LEN && m_off <= M2_MAX_OFFSET &&
@@ -283,7 +284,7 @@ lzo1c_999_compress_callback ( const lzo_bytep in , lzo_uint  in_len,
             /* a literal */
             lit++;
             r = find_match(c,swd,1,0);
-            assert(r == 0);
+            assert(r == 0); LZO_UNUSED(r);
         }
         else
         {
@@ -326,7 +327,7 @@ lzo1c_999_compress_callback ( const lzo_bytep in , lzo_uint  in_len,
             /* 2 - code match */
             op = code_match(c,op,m_len,m_off);
             r = find_match(c,swd,m_len,1+ahead);
-            assert(r == 0);
+            assert(r == 0); LZO_UNUSED(r);
         }
 
         c->codesize = pd(op, out);

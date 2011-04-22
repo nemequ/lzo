@@ -2,6 +2,7 @@
 
    This file is part of the LZO real-time data compression library.
 
+   Copyright (C) 2011 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2010 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2009 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2008 Markus Franz Xaver Johannes Oberhumer
@@ -366,7 +367,7 @@ do_compress    ( const lzo_bytep in , lzo_uint  in_len,
         goto the_end;
 
     /* init dictionary */
-#if defined(LZO_DETERMINISTIC)
+#if (LZO_DETERMINISTIC)
     BZERO8_PTR(wrkmem,sizeof(lzo_dict_t),D_SIZE);
 #endif
 
@@ -402,13 +403,13 @@ literal:
 
 match:
         UPDATE_I(dict,0,dindex,ip,in);
-#if !defined(NDEBUG) && defined(LZO_DICT_USE_PTR)
+#if !defined(NDEBUG) && (LZO_DICT_USE_PTR)
         m_pos_sav = m_pos;
 #endif
         m_pos += 3;
         {
     /* we have found a match (of at least length 3) */
-#if !defined(NDEBUG) && !defined(LZO_DICT_USE_PTR)
+#if !defined(NDEBUG) && !(LZO_DICT_USE_PTR)
             assert((m_pos_sav = ip - m_off) == (m_pos - 3));
 #endif
             /* 1) store the current literal run */

@@ -2,6 +2,7 @@
 
    This file is part of the LZO real-time data compression library.
 
+   Copyright (C) 2011 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2010 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2009 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2008 Markus Franz Xaver Johannes Oberhumer
@@ -63,7 +64,7 @@
 //   TEST_OP    test output overrun at loop begin
 //   NEED_OP    test output overrun at every output byte
 //
-//   TEST_LB    test match postion
+//   TEST_LB    test match position
 //
 // The fastest decompressor results when testing for no overruns
 // and using LZO_EOF_CODE.

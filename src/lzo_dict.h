@@ -2,6 +2,7 @@
 
    This file is part of the LZO real-time data compression library.
 
+   Copyright (C) 2011 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2010 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2009 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2008 Markus Franz Xaver Johannes Oberhumer
@@ -243,11 +244,11 @@ DVAL_ASSERT(lzo_xint dv, const lzo_bytep p)
 // dictionary updating
 ************************************************************************/
 
-#if defined(LZO_DICT_USE_PTR)
+#if (LZO_DICT_USE_PTR)
 #  define DENTRY(p,in)                          (p)
 #  define GINDEX(m_pos,m_off,dict,dindex,in)    m_pos = dict[dindex]
 #else
-#  define DENTRY(p,in)                          ((lzo_uint) ((p)-(in)))
+#  define DENTRY(p,in)                          ((lzo_dict_t) pd(p, in))
 #  define GINDEX(m_pos,m_off,dict,dindex,in)    m_off = dict[dindex]
 #endif
 
@@ -274,7 +275,7 @@ DVAL_ASSERT(lzo_xint dv, const lzo_bytep p)
 // test for a match
 ************************************************************************/
 
-#if defined(LZO_DICT_USE_PTR)
+#if (LZO_DICT_USE_PTR)
 
 /* m_pos is either NULL or a valid pointer */
 #define LZO_CHECK_MPOS_DET(m_pos,m_off,in,ip,max_offset) \
@@ -303,7 +304,7 @@ DVAL_ASSERT(lzo_xint dv, const lzo_bytep p)
 #endif
 
 
-#if defined(LZO_DETERMINISTIC)
+#if (LZO_DETERMINISTIC)
 #  define LZO_CHECK_MPOS    LZO_CHECK_MPOS_DET
 #else
 #  define LZO_CHECK_MPOS    LZO_CHECK_MPOS_NON_DET

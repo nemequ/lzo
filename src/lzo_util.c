@@ -2,6 +2,7 @@
 
    This file is part of the LZO real-time data compression library.
 
+   Copyright (C) 2011 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2010 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2009 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2008 Markus Franz Xaver Johannes Oberhumer
@@ -58,7 +59,7 @@ static const char __lzo_copyright[] =
 #else
     "\r\n\n"
     "LZO data compression library.\n"
-    "$Copyright: LZO Copyright (C) 1996-2010 Markus Franz Xaver Johannes Oberhumer\n"
+    "$Copyright: LZO Copyright (C) 1996-2011 Markus Franz Xaver Johannes Oberhumer\n"
     "<markus@oberhumer.com>\n"
     "http://www.oberhumer.com $\n\n"
     "$Id: LZO version: v" LZO_VERSION_STRING ", " LZO_VERSION_DATE " $\n"

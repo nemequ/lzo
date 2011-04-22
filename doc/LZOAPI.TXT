@@ -83,7 +83,7 @@ old Atari ST, which has 16 bit integers and a flat 32-bit memory model.
 Using 'huge' 32-bit pointers under 16-bit DOS is a workaround for this.
 
 While LZO also works with a strict 16-bit memory model, I don't officially
-support this because this limits the maximum block size to 64 kB - and this
+support this because this limits the maximum block size to 64 KiB - and this
 makes the library incompatible with other platforms, i.e. you cannot
 decompress larger blocks compressed on those platforms.
 
@@ -180,7 +180,7 @@ int lzo1x_1_compress ( const lzo_bytep src, lzo_uint  src_len,
 
   Algorithm:            LZO1X
   Compression level:    LZO1X-1
-  Memory requirements:  LZO1X_1_MEM_COMPRESS    (64 kB on 32-bit machines)
+  Memory requirements:  LZO1X_1_MEM_COMPRESS    (64 KiB on 32-bit machines)
 
   This compressor is pretty fast.
 
@@ -196,7 +196,7 @@ int lzo1x_999_compress ( const lzo_bytep src, lzo_uint  src_len,
 
   Algorithm:            LZO1X
   Compression level:    LZO1X-999
-  Memory requirements:  LZO1X_999_MEM_COMPRESS  (448 kB on 32-bit machines)
+  Memory requirements:  LZO1X_999_MEM_COMPRESS  (448 KiB on 32-bit machines)
 
   This compressor is quite slow but achieves a good compression
   ratio. It is mainly intended for generating pre-compressed data.

@@ -2,6 +2,7 @@
 
    This file is part of the LZO real-time data compression library.
 
+   Copyright (C) 2011 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2010 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2009 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2008 Markus Franz Xaver Johannes Oberhumer
@@ -89,7 +90,7 @@
 
 #if !(SWD_NO_HEAD2) && (SWD_THRESHOLD == 1) && !defined(HEAD2)
 #  if 1 && defined(LZO_UNALIGNED_OK_2)
-#    define HEAD2(b,p)      (* (lzo_ushortp) (lzo_voidp) ((b)+(p)))
+#    define HEAD2(b,p)      UA_GET16((b)+(p))
 #  else
 #    define HEAD2(b,p)      (b[p] ^ ((unsigned)b[p+1]<<8))
 #  endif
@@ -573,7 +574,7 @@ void swd_search(lzo_swd_p s, lzo_uint node, lzo_uint cnt)
 
 #if 0 && defined(LZO_UNALIGNED_OK_4)
             p1 += 3; p2 += 3;
-            while (p1 < px && * (const lzo_uint32p) p1 == * (const lzo_uint32p) p2)
+            while (p1 + 4 <= px && UA_GET32(p1) == UA_GET32(p2))
                 p1 += 4, p2 += 4;
             while (p1 < px && *p1 == *p2)
                 p1 += 1, p2 += 1;

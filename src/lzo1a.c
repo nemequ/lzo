@@ -2,6 +2,7 @@
 
    This file is part of the LZO real-time data compression library.
 
+   Copyright (C) 2011 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2010 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2009 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2008 Markus Franz Xaver Johannes Oberhumer
@@ -104,7 +105,7 @@
 #endif
 
 
-#if defined(LZO_COLLECT_STATS)
+#if (LZO_COLLECT_STATS)
    static lzo1a_stats_t lzo_statistics;
    lzo1a_stats_t *lzo1a_stats = &lzo_statistics;
 #  define lzo_stats lzo1a_stats
@@ -196,9 +197,9 @@ literal:
                 m_pos = op - MIN_OFFSET;
                 m_pos -= t | (((lzo_uint) *ip++) << OBITS);
                 assert(m_pos >= out); assert(m_pos < op);
-                *op++ = *m_pos++;
-                *op++ = *m_pos++;
-                *op++ = *m_pos++;
+                *op++ = m_pos[0];
+                *op++ = m_pos[1];
+                *op++ = m_pos[2];
                 *op++ = *ip++;
             }
         }
@@ -285,7 +286,7 @@ do_compress    ( const lzo_bytep in , lzo_uint  in_len,
     ii = ip;            /* point to start of current literal run */
 
     /* init dictionary */
-#if defined(LZO_DETERMINISTIC)
+#if (LZO_DETERMINISTIC)
     BZERO8_PTR(wrkmem,sizeof(lzo_dict_t),D_SIZE);
 #endif
 
@@ -318,7 +319,7 @@ literal:
 
 match:
         UPDATE_I(dict,0,dindex,ip,in);
-#if !defined(NDEBUG) && defined(LZO_DICT_USE_PTR)
+#if !defined(NDEBUG) && (LZO_DICT_USE_PTR)
         assert(m_pos == NULL || m_pos >= in);
         m_pos_sav = m_pos;
 #endif
@@ -326,7 +327,7 @@ match:
         {
     /* we have found a match (of at least length 3) */
 
-#if !defined(NDEBUG) && !defined(LZO_DICT_USE_PTR)
+#if !defined(NDEBUG) && !(LZO_DICT_USE_PTR)
             assert((m_pos_sav = ip - m_off) == (m_pos - 3));
 #endif
 
@@ -454,7 +455,7 @@ match:
                 *op++ = LZO_BYTE(m_off >> OBITS);
 
 
-#if defined(LZO_COLLECT_STATS)
+#if (LZO_COLLECT_STATS)
                 lzo_stats->short_matches++;
                 lzo_stats->short_match[m_len]++;
                 if (m_off < OSIZE)
@@ -532,7 +533,7 @@ match:
                 *op++ = LZO_BYTE(m_len - MIN_MATCH_LONG);
 
 
-#if defined(LZO_COLLECT_STATS)
+#if (LZO_COLLECT_STATS)
                 lzo_stats->long_matches++;
                 lzo_stats->long_match[m_len]++;
 #endif
@@ -610,7 +611,7 @@ lzo1a_compress ( const lzo_bytep in , lzo_uint  in_len,
     int r = LZO_E_OK;
 
 
-#if defined(LZO_COLLECT_STATS)
+#if (LZO_COLLECT_STATS)
     lzo_memset(lzo_stats,0,sizeof(*lzo_stats));
     lzo_stats->rbits  = RBITS;
     lzo_stats->clevel = CLEVEL;
@@ -644,7 +645,7 @@ lzo1a_compress ( const lzo_bytep in , lzo_uint  in_len,
         r = do_compress(in,in_len,out,out_len,wrkmem);
 
 
-#if defined(LZO_COLLECT_STATS)
+#if (LZO_COLLECT_STATS)
     lzo_stats->short_matches -= lzo_stats->r1_matches;
     lzo_stats->short_match[MIN_MATCH] -= lzo_stats->r1_matches;
     lzo_stats->out_len = *out_len;

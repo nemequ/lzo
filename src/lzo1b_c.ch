@@ -2,6 +2,7 @@
 
    This file is part of the LZO real-time data compression library.
 
+   Copyright (C) 2011 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2010 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2009 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2008 Markus Franz Xaver Johannes Oberhumer
@@ -99,7 +100,7 @@ do_compress    ( const lzo_bytep in , lzo_uint  in_len,
     lzo_dict_p const dict = (lzo_dict_p) wrkmem;
 
 
-#if defined(LZO_COLLECT_STATS)
+#if (LZO_COLLECT_STATS)
     lzo_stats->r_bits   = R_BITS;
     lzo_stats->m3o_bits = M3O_BITS;
     lzo_stats->dd_bits  = DD_BITS;
@@ -111,7 +112,7 @@ do_compress    ( const lzo_bytep in , lzo_uint  in_len,
 #endif
 
     /* init dictionary */
-#if defined(LZO_DETERMINISTIC)
+#if (LZO_DETERMINISTIC)
     BZERO8_PTR(wrkmem,sizeof(lzo_dict_t),D_SIZE);
 #endif
 
@@ -227,7 +228,7 @@ match:
 
     assert(ip <= in_end);
 
-#if defined(LZO_COLLECT_STATS)
+#if (LZO_COLLECT_STATS)
     {
         lzo_uint i;
         const lzo_bytep p;

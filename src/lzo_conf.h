@@ -2,6 +2,7 @@
 
    This file is part of the LZO real-time data compression library.
 
+   Copyright (C) 2011 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2010 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2009 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 2008 Markus Franz Xaver Johannes Oberhumer
@@ -258,7 +259,6 @@
  * even if it is allowed by your system.
  */
 
-#if 1 && !(LZO_CFG_NO_UNALIGNED)
 #if 1 && (LZO_ARCH_AMD64 || LZO_ARCH_I386 || LZO_ARCH_POWERPC)
 #  if (LZO_SIZEOF_SHORT == 2)
 #    define LZO_UNALIGNED_OK_2 1
@@ -267,23 +267,60 @@
 #    define LZO_UNALIGNED_OK_4 1
 #  endif
 #endif
+#if 1 && (LZO_ARCH_AMD64)
+#  if defined(LZO_UINT64_MAX)
+#    define LZO_UNALIGNED_OK_8 1
+#  endif
+#endif
+#if (LZO_CFG_NO_UNALIGNED)
+#  undef LZO_UNALIGNED_OK_2
+#  undef LZO_UNALIGNED_OK_4
+#  undef LZO_UNALIGNED_OK_8
 #endif
 
+#undef UA_GET16
+#undef UA_SET16
+#undef UA_COPY16
+#undef UA_GET32
+#undef UA_SET32
+#undef UA_COPY32
+#undef UA_GET64
+#undef UA_SET64
+#undef UA_COPY64
 #if defined(LZO_UNALIGNED_OK_2)
-  LZO_COMPILE_TIME_ASSERT_HEADER(sizeof(short) == 2)
-#endif
-#if defined(LZO_UNALIGNED_OK_4)
-  LZO_COMPILE_TIME_ASSERT_HEADER(sizeof(lzo_uint32) == 4)
-#elif defined(LZO_ALIGNED_OK_4)
-  LZO_COMPILE_TIME_ASSERT_HEADER(sizeof(lzo_uint32) == 4)
-#endif
-
-#undef COPY4
-#if defined(LZO_UNALIGNED_OK_4) || defined(LZO_ALIGNED_OK_4)
-#  if 1 && defined(ACC_UA_COPY32)
-#    define COPY4(d,s)  ACC_UA_COPY32(d,s)
+   LZO_COMPILE_TIME_ASSERT_HEADER(sizeof(unsigned short) == 2)
+#  if 1 && defined(ACC_UA_COPY16)
+#    define UA_GET16        ACC_UA_GET16
+#    define UA_SET16        ACC_UA_SET16
+#    define UA_COPY16       ACC_UA_COPY16
 #  else
-#    define COPY4(d,s)  (* (__lzo_ua_volatile lzo_uint32p)(__lzo_ua_volatile lzo_voidp)(d) = * (__lzo_ua_volatile const lzo_uint32p)(__lzo_ua_volatile const lzo_voidp)(s))
+#    define UA_GET16(p)     (* (__lzo_ua_volatile const lzo_ushortp) (__lzo_ua_volatile const lzo_voidp) (p))
+#    define UA_SET16(p,v)   ((* (__lzo_ua_volatile lzo_ushortp) (__lzo_ua_volatile lzo_voidp) (p)) = (unsigned short) (v))
+#    define UA_COPY16(d,s)  UA_SET16(d, UA_GET16(s))
+#  endif
+#endif
+#if defined(LZO_UNALIGNED_OK_4) || defined(LZO_ALIGNED_OK_4)
+   LZO_COMPILE_TIME_ASSERT_HEADER(sizeof(lzo_uint32) == 4)
+#  if 1 && defined(ACC_UA_COPY32)
+#    define UA_GET32        ACC_UA_GET32
+#    define UA_SET32        ACC_UA_SET32
+#    define UA_COPY32       ACC_UA_COPY32
+#  else
+#    define UA_GET32(p)     (* (__lzo_ua_volatile const lzo_uint32p) (__lzo_ua_volatile const lzo_voidp) (p))
+#    define UA_SET32(p,v)   ((* (__lzo_ua_volatile lzo_uint32p) (__lzo_ua_volatile lzo_voidp) (p)) = (lzo_uint32) (v))
+#    define UA_COPY32(d,s)  UA_SET32(d, UA_GET32(s))
+#  endif
+#endif
+#if defined(LZO_UNALIGNED_OK_8)
+   LZO_COMPILE_TIME_ASSERT_HEADER(sizeof(lzo_uint64) == 8)
+#  if 1 && defined(ACC_UA_COPY64)
+#    define UA_GET64        ACC_UA_GET64
+#    define UA_SET64        ACC_UA_SET64
+#    define UA_COPY64       ACC_UA_COPY64
+#  else
+#    define UA_GET64(p)     (* (__lzo_ua_volatile const lzo_uint64p) (__lzo_ua_volatile const lzo_voidp) (p))
+#    define UA_SET64(p,v)   ((* (__lzo_ua_volatile lzo_uint64p) (__lzo_ua_volatile lzo_voidp) (p)) = (lzo_uint64) (v))
+#    define UA_COPY64(d,s)  UA_SET64(d, UA_GET64(s))
 #  endif
 #endif
 
@@ -325,12 +362,17 @@ LZO_EXTERN(const lzo_bytep) lzo_copyright(void);
  * then the initialization of the dictionary becomes a relevant
  * magnitude for compression speed.
  */
+#ifndef LZO_DETERMINISTIC
 #define LZO_DETERMINISTIC 1
+#endif
 
 
+#ifndef LZO_DICT_USE_PTR
 #define LZO_DICT_USE_PTR 1
 #if 0 && (LZO_ARCH_I086)
 #  undef LZO_DICT_USE_PTR
+#  define LZO_DICT_USE_PTR 0
+#endif
 #endif
 
 #if (LZO_DICT_USE_PTR)
