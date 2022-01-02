@@ -75,6 +75,7 @@ file(GLOB lzo_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.c")
 list(SORT lzo_SOURCES)
 
 # LZO library
+
 if(NOT DEFINED lzo_USE_OBJECT_LIB)
     if(ENABLE_STATIC AND ENABLE_SHARED)
         if(CMAKE_POSITION_INDEPENDENT_CODE OR MSVC)
@@ -97,6 +98,11 @@ if(ENABLE_STATIC)
         list(APPEND lzo_COMPILE_TARGETS lzo_static_lib)
     endif()
     set_target_properties(lzo_static_lib PROPERTIES OUTPUT_NAME lzo2)
+    target_include_directories(lzo_static_lib PUBLIC
+      ${CMAKE_CURRENT_SOURCE_DIR}/minilzo
+      ${CMAKE_CURRENT_SOURCE_DIR}/include
+      ${CMAKE_CURRENT_SOURCE_DIR}/include/lzo
+      )
 endif()
 if(ENABLE_SHARED)
     if(lzo_USE_OBJECT_LIB)
