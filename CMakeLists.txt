@@ -100,6 +100,7 @@ if(ENABLE_STATIC)
     set_target_properties(lzo_static_lib PROPERTIES OUTPUT_NAME lzo2)
     target_include_directories(lzo_static_lib PUBLIC
       ${CMAKE_CURRENT_SOURCE_DIR}/minilzo
+      ${CMAKE_CURRENT_SOURCE_DIR}/include
       ${CMAKE_CURRENT_SOURCE_DIR}/include/lzo
       )
 endif()
