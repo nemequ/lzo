@@ -269,7 +269,6 @@ DVAL_ASSERT(lzo_xint dv, const lzo_bytep p)
 /* m_pos may point anywhere... */
 #define LZO_CHECK_MPOS_NON_DET(m_pos,m_off,in,ip,max_offset) \
     (BOUNDS_CHECKING_OFF_IN_EXPR(( \
-        m_pos = ip - (lzo_uint) PTR_DIFF(ip,m_pos), \
         PTR_LT(m_pos,in) || \
         (m_off = (lzo_uint) PTR_DIFF(ip,m_pos)) == 0 || \
          m_off > max_offset )))
